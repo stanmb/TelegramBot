@@ -18,6 +18,7 @@ import java.util.List;
 
 public class Bot extends TelegramLongPollingBot {
     public static void main(String[] args) {
+        System.out.println(new ContentKeeper().getAbout());
         ApiContextInitializer.init();
         TelegramBotsApi telegramBotsApi = new TelegramBotsApi();
 
@@ -34,9 +35,9 @@ public class Bot extends TelegramLongPollingBot {
     }
 
     public void onUpdateReceived(Update update) {
-        ListOfBeer listOfBeer = new ListOfBeer();
-        ArrayList<Beer> list = listOfBeer.getListOfBeer();
-        String about = listOfBeer.getAbout();
+        ContentKeeper contentKeeper = new ContentKeeper();
+        ArrayList<Beer> list = contentKeeper.getListOfBeer();
+        String about = contentKeeper.getAbout();
 
         Message message = update.getMessage();
         System.out.println(message);
