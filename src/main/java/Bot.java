@@ -35,7 +35,7 @@ public class Bot extends TelegramLongPollingBot {
 
     public void onUpdateReceived(Update update) {
         ListOfBeer listOfBeer = new ListOfBeer();
-        ArrayList<Beer> list = listOfBeer.getLaefistOfBeer();
+        ArrayList<Beer> list = listOfBeer.getListOfBeer();
         String about = listOfBeer.getAbout();
 
         Message message = update.getMessage();
