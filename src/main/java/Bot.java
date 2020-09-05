@@ -38,9 +38,7 @@ public class Bot extends TelegramLongPollingBot {
         ContentKeeper contentKeeper = new ContentKeeper();
         ArrayList<Beer> list = contentKeeper.getListOfBeer();
         String about = contentKeeper.getAbout();
-
         Message message = update.getMessage();
-        System.out.println(message);
         if (message != null && message.hasText()) {
             switch (message.getText()) {
                 case "\uD83C\uDF7A на кранах" :

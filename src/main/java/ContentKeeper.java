@@ -34,6 +34,7 @@ public class ContentKeeper {
             BufferedReader reader = new BufferedReader( new FileReader("C:\\Users\\andre\\Desktop\\about.txt"));
             while((nextLine = reader.readLine()) != null) {
                 about += nextLine;
+                about += "\n" + "\n" + "\n";
             }
         }
         catch (Exception e) {
