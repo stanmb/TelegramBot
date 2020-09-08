@@ -1,6 +1,4 @@
-import org.telegram.telegrambots.ApiContextInitializer;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
-import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -9,7 +7,6 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMar
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -17,28 +14,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Bot extends TelegramLongPollingBot {
-    public static void main(String[] args) {
-        System.out.println(new ContentKeeper().getAbout());
-        ApiContextInitializer.init();
-        TelegramBotsApi telegramBotsApi = new TelegramBotsApi();
 
-        try {
-            telegramBotsApi.registerBot(new Bot());
-        }
-        catch (TelegramApiRequestException e) {
-            e.printStackTrace();
-        }
-    }
-
+    @Override
     public String getBotToken() {
         return "1206497799:AAHaD_piNaWl-MoJa5NZHRSicSMvZsb2Wp0";
     }
 
+    @Override
     public void onUpdateReceived(Update update) {
+        // set variables
         ContentKeeper contentKeeper = new ContentKeeper();
         ArrayList<Beer> list = contentKeeper.getListOfBeer();
         String about = contentKeeper.getAbout();
         Message message = update.getMessage();
+        // check if the update has a message and the message has text
         if (message != null && message.hasText()) {
             switch (message.getText()) {
                 case "\uD83C\uDF7A на кранах" :
@@ -56,6 +45,11 @@ public class Bot extends TelegramLongPollingBot {
         }
     }
 
+    @Override
+    public String getBotUsername() {
+        return "YaListBot";
+    }
+    // create
     public void setButtons(SendMessage sendMessage) {
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
         sendMessage.setReplyMarkup(replyKeyboardMarkup);
@@ -73,9 +67,7 @@ public class Bot extends TelegramLongPollingBot {
         replyKeyboardMarkup.setKeyboard(keyboardRowList);
     }
 
-    public String getBotUsername() {
-        return "YaListBot";
-    }
+
 
     public void sendMsg(Message message,String text) {
         SendMessage sendMessage = new SendMessage();
@@ -100,7 +92,7 @@ public class Bot extends TelegramLongPollingBot {
 //        sendMessage.setReplyToMessageId(message.getMessageId());
 
         for (Beer beer: list) {
-           nextBeer += beer.getName() + "\n" + beer.getVol() + "\n" + beer.getPriceFor05() + "\n" + "\n" +"\n";
+            nextBeer += beer.getName() + "\n" + beer.getVol() + "\n" + beer.getPriceFor05() + "\n" + "\n" +"\n";
         }
 
         sendMessage.setText(nextBeer);
@@ -131,5 +123,4 @@ public class Bot extends TelegramLongPollingBot {
             e.printStackTrace();
         }
     }
-
 }
