@@ -49,7 +49,7 @@ public class Bot extends TelegramLongPollingBot {
     public String getBotUsername() {
         return "YaListBot";
     }
-    // create
+    // create custom keyboard
     public void setButtons(SendMessage sendMessage) {
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
         sendMessage.setReplyMarkup(replyKeyboardMarkup);
