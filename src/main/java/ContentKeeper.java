@@ -6,10 +6,10 @@ public class ContentKeeper {
     public  ArrayList<Beer> beerList = new ArrayList<Beer>();
 
     //method returns a list of all beer
-    public ArrayList<Beer> getListOfBeer() {
+    public ArrayList<Beer> getListOfBeer(File file) {
         BufferedReader reader;
         try {
-            reader = new BufferedReader(new FileReader("C:\\Users\\andre\\Desktop\\list.txt"));
+            reader = new BufferedReader(new FileReader(file));
             String line = null;
             while ((line = reader.readLine()) != null) {
                 addBear(line);
@@ -27,11 +27,11 @@ public class ContentKeeper {
         beerList.add(beer);
     }
     //method gets about information from file and returns it in String variable
-    public String getAbout() {
+    public String getAbout(File file) {
         String about = "";
         String nextLine;
         try  {
-            BufferedReader reader = new BufferedReader( new FileReader("C:\\Users\\andre\\Desktop\\about.txt"));
+            BufferedReader reader = new BufferedReader( new FileReader(file));
             while((nextLine = reader.readLine()) != null) {
                 about += nextLine;
                 about += "\n" + "\n" + "\n";

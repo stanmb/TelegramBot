@@ -8,12 +8,15 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.Keyboard
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Bot extends TelegramLongPollingBot {
+    File aboutFilePath = new File("C:\\Users\\andre\\Desktop\\about.txt");
+    File beerFilePath = new File("C:\\Users\\andre\\Desktop\\list.txt");
 
     @Override
     public String getBotToken() {
@@ -24,8 +27,8 @@ public class Bot extends TelegramLongPollingBot {
     public void onUpdateReceived(Update update) {
         // set variables
         ContentKeeper contentKeeper = new ContentKeeper();
-        ArrayList<Beer> list = contentKeeper.getListOfBeer();
-        String about = contentKeeper.getAbout();
+        ArrayList<Beer> list = contentKeeper.getListOfBeer(beerFilePath);
+        String about = contentKeeper.getAbout(aboutFilePath);
         Message message = update.getMessage();
         // check if the update has a message and the message has text
         if (message != null && message.hasText()) {
