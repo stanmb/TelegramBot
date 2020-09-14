@@ -30,7 +30,7 @@ public class Keyboard {
         replyKeyboardMarkup.setKeyboard(keyboardRowList);
     }
 
-    public void setButtonsAdmin(SendMessage sendMessage) {
+    public void setButtonsGeneralAdmin(SendMessage sendMessage) {
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
         sendMessage.setReplyMarkup(replyKeyboardMarkup);
         replyKeyboardMarkup.setSelective(true);
@@ -49,4 +49,51 @@ public class Keyboard {
         keyboardRowList.add(keyBoardSecondRow);
         replyKeyboardMarkup.setKeyboard(keyboardRowList);
     }
+
+    public void setButtonsAdminPanel(SendMessage sendMessage) {
+        ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
+        sendMessage.setReplyMarkup(replyKeyboardMarkup);
+        replyKeyboardMarkup.setSelective(true);
+        replyKeyboardMarkup.setResizeKeyboard(true);
+        replyKeyboardMarkup.setOneTimeKeyboard(false);
+
+        List<KeyboardRow> keyboardRowList = new ArrayList<KeyboardRow>();
+        KeyboardRow keyBoardFirstRow = new KeyboardRow();
+        KeyboardRow keyBoardSecondRow = new KeyboardRow();
+
+        keyBoardFirstRow.add(new KeyboardButton("Отредактировать краны"));
+        keyBoardFirstRow.add(new KeyboardButton("Отредактировать о нас"));
+        keyBoardSecondRow.add(new KeyboardButton("Назад"));
+
+        keyboardRowList.add(keyBoardFirstRow);
+        keyboardRowList.add(keyBoardSecondRow);
+        replyKeyboardMarkup.setKeyboard(keyboardRowList);
+    }
+
+    public void setTapFix(SendMessage sendMessage) {
+        ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
+        sendMessage.setReplyMarkup(replyKeyboardMarkup);
+        replyKeyboardMarkup.setSelective(true);
+        replyKeyboardMarkup.setResizeKeyboard(true);
+        replyKeyboardMarkup.setOneTimeKeyboard(false);
+
+        List<KeyboardRow> keyboardRowList = new ArrayList<KeyboardRow>();
+        KeyboardRow keyBoardFirstRow = new KeyboardRow();
+        KeyboardRow keyBoardSecondRow = new KeyboardRow();
+        KeyboardRow keyBoardThirdRow = new KeyboardRow();
+
+        keyBoardFirstRow.add(new KeyboardButton("1" ));
+        keyBoardFirstRow.add(new KeyboardButton("2"));
+        keyBoardFirstRow.add(new KeyboardButton("3"));
+        keyBoardSecondRow.add(new KeyboardButton( "4"));
+        keyBoardSecondRow.add(new KeyboardButton( "5"));
+        keyBoardSecondRow.add(new KeyboardButton( "6"));
+        keyBoardThirdRow.add(new KeyboardButton( "Назад"));
+
+        keyboardRowList.add(keyBoardFirstRow);
+        keyboardRowList.add(keyBoardSecondRow);
+        keyboardRowList.add(keyBoardThirdRow);
+        replyKeyboardMarkup.setKeyboard(keyboardRowList);
+    }
+
 }
