@@ -33,6 +33,7 @@ public class Bot extends TelegramLongPollingBot {
         Message message = update.getMessage();
         // check if the update has a message and the message has text
         if (message != null && message.hasText()) {
+            System.out.println(message);
             switch (message.getText()) {
                 case "\uD83C\uDF7A на кранах" :
                     sendMsg(message,list, "setButtonsGeneral");
