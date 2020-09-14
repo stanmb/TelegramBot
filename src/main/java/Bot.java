@@ -17,6 +17,7 @@ import java.util.List;
 public class Bot extends TelegramLongPollingBot {
     File aboutFilePath = new File("C:\\Users\\andre\\Desktop\\about.txt");
     File beerFilePath = new File("C:\\Users\\andre\\Desktop\\list.txt");
+    Keyboard keyboard = new Keyboard();
 
     @Override
     public String getBotToken() {
@@ -34,15 +35,16 @@ public class Bot extends TelegramLongPollingBot {
         if (message != null && message.hasText()) {
             switch (message.getText()) {
                 case "\uD83C\uDF7A на кранах" :
-                    sendMsg(message,list);
+                    sendMsg(message,list, "setButtonsGeneral");
                     break;
                 case "\uD83C\uDFE1 о нас":
-                    sendMsg(message, about);
+                    sendMsg(message, about, "setButtonsAdmin");
                     break;
                 case "/start":
-                    sendMsg(message, "Привет!");
+                    sendMsg(message, "Привет!", "setButtonsGeneral");
                     break;
-                default:
+                case "\uD83D\uDEE0 Настройки":
+                    sendMsg(message,"Привет, Админ! Что будем настраивать?", "setButtonsAdmin" );
 
             }
         }
@@ -53,40 +55,37 @@ public class Bot extends TelegramLongPollingBot {
         return "YaListBot";
     }
     // create custom keyboard
-    public void setButtons(SendMessage sendMessage) {
-        ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
-        sendMessage.setReplyMarkup(replyKeyboardMarkup);
-        replyKeyboardMarkup.setSelective(true);
-        replyKeyboardMarkup.setResizeKeyboard(true);
-        replyKeyboardMarkup.setOneTimeKeyboard(false);
-
-        List<KeyboardRow> keyboardRowList = new ArrayList<KeyboardRow>();
-        KeyboardRow keyBoardFirstRow = new KeyboardRow();
-
-        keyBoardFirstRow.add(new KeyboardButton("🍺 на кранах" ));
-        keyBoardFirstRow.add(new KeyboardButton("\uD83C\uDFE1 о нас"));
-
-        keyboardRowList.add(keyBoardFirstRow);
-        replyKeyboardMarkup.setKeyboard(keyboardRowList);
-    }
 
 
 
-    public void sendMsg(Message message,String text) {
+
+    public void sendMsg(Message message,String text, String nameOfKeyboard) {
         SendMessage sendMessage = new SendMessage();
         sendMessage.enableMarkdown(true);
         sendMessage.setChatId(message.getChatId().toString());
 //      sendMessage.setReplyToMessageId(message.getMessageId());
         sendMessage.setText("\n" + text);
         try {
-            setButtons(sendMessage);
-            execute(sendMessage);
+            switch (nameOfKeyboard) {
+                case "setButtonsAdmin" :
+                    keyboard.setButtonsAdmin(sendMessage);
+                    execute(sendMessage);
+                    // keyboard.clearKeyboard(sendMessage);
+                    break;
+
+                case "setButtonsGeneral" :
+                    keyboard.setButtonsGeneral(sendMessage);
+                    execute(sendMessage);
+                    // keyboard.clearKeyboard(sendMessage);
+                    break;
+            }
+
         }
         catch (TelegramApiException e) {
             e.printStackTrace();
         }
     }
-    public void sendMsg(Message message,ArrayList<Beer> list) {
+    public void sendMsg(Message message,ArrayList<Beer> list, String nameOfKeyboard) {
         String nextBeer = "Сегодня на кранах:" + "\n" + "\n";
 
         SendMessage sendMessage = new SendMessage();
@@ -101,8 +100,20 @@ public class Bot extends TelegramLongPollingBot {
         sendMessage.setText(nextBeer);
 
         try {
-            setButtons(sendMessage);
-            execute(sendMessage);
+            switch (nameOfKeyboard) {
+                case "setButtonsAdmin" :
+                    keyboard.setButtonsAdmin(sendMessage);
+                    execute(sendMessage);
+                    // keyboard.clearKeyboard(sendMessage);
+                    break;
+
+                case "setButtonsGeneral" :
+                    keyboard.setButtonsGeneral(sendMessage);
+                    execute(sendMessage);
+                    // keyboard.clearKeyboard(sendMessage);
+                    break;
+            }
+
         }
         catch (TelegramApiException e) {
             e.printStackTrace();
