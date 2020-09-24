@@ -62,7 +62,7 @@ public class Keyboard {
         KeyboardRow keyBoardSecondRow = new KeyboardRow();
 
         keyBoardFirstRow.add(new KeyboardButton("Отредактировать краны"));
-        keyBoardFirstRow.add(new KeyboardButton("Отредактировать о нас"));
+        keyBoardFirstRow.add(new KeyboardButton("Отредактировать \"о нас\""));
         keyBoardSecondRow.add(new KeyboardButton("Назад"));
 
         keyboardRowList.add(keyBoardFirstRow);
@@ -70,7 +70,7 @@ public class Keyboard {
         replyKeyboardMarkup.setKeyboard(keyboardRowList);
     }
 
-    public void setTapFix(SendMessage sendMessage) {
+    public void setTap(SendMessage sendMessage) {
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
         sendMessage.setReplyMarkup(replyKeyboardMarkup);
         replyKeyboardMarkup.setSelective(true);
@@ -93,6 +93,25 @@ public class Keyboard {
         keyboardRowList.add(keyBoardFirstRow);
         keyboardRowList.add(keyBoardSecondRow);
         keyboardRowList.add(keyBoardThirdRow);
+        replyKeyboardMarkup.setKeyboard(keyboardRowList);
+    }
+
+    public void aboutEdit(SendMessage sendMessage) {
+        ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
+        sendMessage.setReplyMarkup(replyKeyboardMarkup);
+        replyKeyboardMarkup.setSelective(true);
+        replyKeyboardMarkup.setResizeKeyboard(true);
+        replyKeyboardMarkup.setOneTimeKeyboard(false);
+
+        List<KeyboardRow> keyboardRowList = new ArrayList<KeyboardRow>();
+        KeyboardRow keyBoardFirstRow = new KeyboardRow();
+        KeyboardRow keyBoardSecondRow = new KeyboardRow();
+
+        keyBoardFirstRow.add(new KeyboardButton("Ок, меняем"));
+        keyBoardSecondRow.add(new KeyboardButton("Назад"));
+
+        keyboardRowList.add(keyBoardFirstRow);
+        keyboardRowList.add(keyBoardSecondRow);
         replyKeyboardMarkup.setKeyboard(keyboardRowList);
     }
 

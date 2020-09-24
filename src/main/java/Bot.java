@@ -10,10 +10,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 public class Bot extends TelegramLongPollingBot {
+
     File aboutFilePath = new File("C:\\Users\\andre\\Desktop\\about.txt");
     File beerFilePath = new File("C:\\Users\\andre\\Desktop\\list.txt");
     Keyboard keyboard = new Keyboard();
@@ -28,8 +27,10 @@ public class Bot extends TelegramLongPollingBot {
     @Override
     public void onUpdateReceived(Update update) {
         // set variables
+        // Connect to SQL
         ContentKeeper contentKeeper = new ContentKeeper();
-        ArrayList<Beer> list = contentKeeper.getListOfBeer(beerFilePath);
+        ArrayList<Beer> list = contentKeeper.getListOfBeer1();
+      //  ArrayList<Beer> list = contentKeeper.getListOfBeer(beerFilePath);
         String about = contentKeeper.getAbout(aboutFilePath);
         Message message = update.getMessage();
 
@@ -63,15 +64,24 @@ public class Bot extends TelegramLongPollingBot {
                     }
                     break;
                 case "\uD83D\uDEE0 Настройки":
-                    if (message.getChatId() == admin)
-                    sendMsg(message,"Привет, Админ! Что будем настраивать?", "setButtonsAdminPanel" );
-                    numberOfPage = "1";
+                    if (message.getChatId() == admin) {
+                        sendMsg(message, "Привет, Админ! Что будем настраивать?", "setButtonsAdminPanel");
+                        numberOfPage = "1";
+                    }
                     break;
                 case "Отредактировать краны":
-                    if (message.getChatId() == admin)
-                    sendMsg(message,"Какой кран будем редактировать?", "setTapFix" );
-                    numberOfPage = "2";
+                    if (message.getChatId() == admin) {
+                        sendMsg(message, "Какой кран будем редактировать?", "setTapFix");
+                        numberOfPage = "2";
+                    }
                     break;
+                case "Отредактировать \"о нас\"":
+                    if (message.getChatId() == admin) {
+                        sendMsg(message,"Какой текст будет теперь?", "aboutEdit");
+                        numberOfPage = "3";
+                    }
+                    break;
+
                 case "Назад":
                     if (message.getChatId() == admin) {
                         switch (numberOfPage) {
@@ -79,6 +89,7 @@ public class Bot extends TelegramLongPollingBot {
                                 sendMsg(message, "Вернулись назад", "setButtonsGeneralAdmin");
                                 break;
                             case "2":
+                            case "3":
                                 sendMsg(message, "Вернулись назад", "setButtonsAdminPanel");
                                 break;
                         }
@@ -117,12 +128,19 @@ public class Bot extends TelegramLongPollingBot {
                     break;
 
                 case "setTapFix" :
-                    keyboard.setTapFix(sendMessage);
+                    keyboard.setTap(sendMessage);
                     execute(sendMessage);
                     // keyboard.clearKeyboard(sendMessage);
                     break;
+
                 case "setButtonsAdminPanel" :
                     keyboard.setButtonsAdminPanel(sendMessage);
+                    execute(sendMessage);
+                    // keyboard.clearKeyboard(sendMessage);
+                    break;
+
+                case "aboutEdit" :
+                    keyboard.aboutEdit(sendMessage);
                     execute(sendMessage);
                     // keyboard.clearKeyboard(sendMessage);
                     break;
@@ -142,7 +160,7 @@ public class Bot extends TelegramLongPollingBot {
 //        sendMessage.setReplyToMessageId(message.getMessageId());
 
         for (Beer beer: list) {
-            nextBeer += beer.getName() + "\n" + beer.getVol() + "\n" + beer.getPriceFor05() + "\n" + "\n" +"\n";
+            nextBeer += beer.getName() + "\n" + beer.getVol() + "\n" + beer.getPriceFor05() + "₽" + "\n" + "\n" +"\n";
         }
 
         sendMessage.setText(nextBeer);
