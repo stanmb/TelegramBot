@@ -23,4 +23,8 @@ public class Beer {
         return priceFor05;
     }
 
+    public String toString() {
+        return  this.getName() + "\n" + this.getVol() + "\n" + this.getPriceFor05() + "₽" + "\n" + "\n" +"\n";
+    }
+
 }
