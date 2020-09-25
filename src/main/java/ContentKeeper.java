@@ -8,30 +8,10 @@ import java.util.ArrayList;
 public class ContentKeeper {
     //all beer list initialization
     public  ArrayList<Beer> beerList = new ArrayList<Beer>();
+    File file = new File("C:\\Users\\andre\\Desktop\\about.txt");
 
-    //method returns a list of all beer
-   /* public ArrayList<Beer> getListOfBeer(File file) {
-        BufferedReader reader;
-        try {
-            reader = new BufferedReader(new FileReader(file));
-            String line = null;
-            while ((line = reader.readLine()) != null) {
-                addBear(line);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return beerList;
-    }
-*/
-/*    //method parses line from file with beer, makes new object Beer and add it to the list of all beer
-    public void addBear(String lineToPars) {
-        String[] line = lineToPars.split("/");
-        Beer beer = new Beer(line[0],line[1],line[2]);
-        beerList.add(beer);
-    }*/
     //method gets about information from file and returns it in String variable
-    public String getAbout(File file) {
+    public String getAbout() {
         String about = "";
         String nextLine;
         try  {
@@ -47,12 +27,10 @@ public class ContentKeeper {
         return about;
     }
 
-    public ArrayList<Beer> getListOfBeer1 () {
+    public ArrayList<Beer> getListOfBeer1 (Connection connection) {
         String query = "SELECT * FROM beer";
-        SqlGetConnect sqlGetConnect = new SqlGetConnect();
-        sqlGetConnect.connectEstablish();
-        //Connection connection = sqlGetConnect.connection;
-        try (Connection connection = sqlGetConnect.connection; PreparedStatement preparedStatement = connection.prepareStatement(query);) {
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(query);) {
             ResultSet resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
@@ -64,5 +42,16 @@ public class ContentKeeper {
             e.printStackTrace();
         }
         return beerList;
+    }
+
+    public void aboutEdit(String about) {
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+            writer.write(about);
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 }

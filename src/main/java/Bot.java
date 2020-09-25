@@ -12,21 +12,22 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class Bot extends TelegramLongPollingBot {
+    UserManager user = new UserManager();
+    ArrayList<Long> userList = null;
     ContentKeeper contentKeeper = new ContentKeeper();
     ArrayList<Beer> list = null;
-    Bot() {
-        list = contentKeeper.getListOfBeer1();
-    }
-
-    File aboutFilePath = new File("C:\\Users\\andre\\Desktop\\about.txt");
-    File beerFilePath = new File("C:\\Users\\andre\\Desktop\\list.txt");
+    DatabaseConnect databaseConnect = null;
     Keyboard keyboard = new Keyboard();
     int admin = 361208695;
     String numberOfPage = "0";
 
-    public static void main(String[] args) {
-        System.out.println("AAAAAA!");
+    Bot() {
+        databaseConnect = new DatabaseConnect();
+        databaseConnect.connectEstablish();
+        list = contentKeeper.getListOfBeer1(databaseConnect.connection);
+        userList = user.getUserList(databaseConnect.connection);
     }
+
 
     @Override
     public String getBotToken() {
@@ -35,12 +36,20 @@ public class Bot extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
-        String about = contentKeeper.getAbout(aboutFilePath);
+        String about = contentKeeper.getAbout();
         Message message = update.getMessage();
-        
+
         // check if the update has a message and the message has text
         if (message != null && message.hasText()) {
+            // check if user exists in database and add if not
+            if (!userList.contains(message.getChatId())) {
+                UserManager user = new UserManager(message);
+                user.userCheck(databaseConnect.connection);
+                System.out.println("Пользователь " + message.getChat().getUserName() + " добавлен!");
+                userList = this.user.getUserList(databaseConnect.connection);
+            }
             System.out.println(message);
+            // read user's message and send an answer
             switch (message.getText()) {
                 case "\uD83C\uDF7A на кранах" :
                     if (message.getChatId() == admin) {
@@ -114,7 +123,6 @@ public class Bot extends TelegramLongPollingBot {
         SendMessage sendMessage = new SendMessage();
         sendMessage.enableMarkdown(true);
         sendMessage.setChatId(message.getChatId().toString());
-//      sendMessage.setReplyToMessageId(message.getMessageId());
         sendMessage.setText("\n" + text);
         try {
             switch (nameOfKeyboard) {

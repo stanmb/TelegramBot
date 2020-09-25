@@ -2,7 +2,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class SqlGetConnect {
+public class DatabaseConnect {
     Connection connection = null;
     public void connectEstablish() {
         String host = "jdbc:postgresql://127.0.0.1:5432/hoppydb";
