@@ -15,24 +15,16 @@ public class Beer {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getVol() {
         return vol;
     }
-
-    public void setVol(String vol) {
-        this.vol = vol;
-    }
-
 
     public String getPriceFor05() {
         return priceFor05;
     }
 
-    public void setPriceFor05(String priceFor05) {
-        this.priceFor05 = priceFor05;
+    public String toString() {
+        return  this.getName() + "\n" + this.getVol() + "\n" + this.getPriceFor05() + "₽" + "\n" + "\n" +"\n";
     }
+
 }

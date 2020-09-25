@@ -1,98 +1,168 @@
-import org.telegram.telegrambots.ApiContextInitializer;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
-import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
 
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 public class Bot extends TelegramLongPollingBot {
-    public static void main(String[] args) {
-        ApiContextInitializer.init();
-        TelegramBotsApi telegramBotsApi = new TelegramBotsApi();
+    UserManager user = new UserManager();
+    ArrayList<Long> userList = null;
+    ContentKeeper contentKeeper = new ContentKeeper();
+    ArrayList<Beer> list = null;
+    DatabaseConnect databaseConnect = null;
+    Keyboard keyboard = new Keyboard();
+    int admin = 361208695;
+    String numberOfPage = "0";
 
-        try {
-            telegramBotsApi.registerBot(new Bot());
-        }
-        catch (TelegramApiRequestException e) {
-            e.printStackTrace();
-        }
+    Bot() {
+        databaseConnect = new DatabaseConnect();
+        databaseConnect.connectEstablish();
+        list = contentKeeper.getListOfBeer1(databaseConnect.connection);
+        userList = user.getUserList(databaseConnect.connection);
     }
 
+
+    @Override
     public String getBotToken() {
         return "1206497799:AAHaD_piNaWl-MoJa5NZHRSicSMvZsb2Wp0";
     }
 
+    @Override
     public void onUpdateReceived(Update update) {
-        ListOfBeer listOfBeer = new ListOfBeer();
-        ArrayList<Beer> list = listOfBeer.getListOfBeer();
-        String about = listOfBeer.getAbout();
-
+        String about = contentKeeper.getAbout();
         Message message = update.getMessage();
-        System.out.println(message);
+
+        // check if the update has a message and the message has text
         if (message != null && message.hasText()) {
+            // check if user exists in database and add if not
+            if (!userList.contains(message.getChatId())) {
+                UserManager user = new UserManager(message);
+                user.userCheck(databaseConnect.connection);
+                System.out.println("Пользователь " + message.getChat().getUserName() + " добавлен!");
+                userList = this.user.getUserList(databaseConnect.connection);
+            }
+            System.out.println(message);
+            // read user's message and send an answer
             switch (message.getText()) {
                 case "\uD83C\uDF7A на кранах" :
-                    sendMsg(message,list);
+                    if (message.getChatId() == admin) {
+                        sendMsg(message, list, "setButtonsGeneralAdmin");
+                    }
+                    else {
+                        sendMsg(message,list, "setButtonsGeneral");
+                    }
                     break;
                 case "\uD83C\uDFE1 о нас":
-                    sendMsg(message, about);
+                    if (message.getChatId() == admin) {
+                        sendMsg(message, about, "setButtonsGeneralAdmin");
+                    }
+                    else {
+                        sendMsg(message, about, "setButtonsGeneral");
+                    }
                     break;
                 case "/start":
-                    sendMsg(message, "Привет!");
+                    if (message.getChatId() == admin) {
+                        sendMsg(message, "Привет!", "setButtonsGeneralAdmin");
+                    }
+                    else {
+                        sendMsg(message, "Привет!", "setButtonsGeneral");
+                    }
                     break;
-                default:
+                case "\uD83D\uDEE0 Настройки":
+                    if (message.getChatId() == admin) {
+                        sendMsg(message, "Привет, Админ! Что будем настраивать?", "setButtonsAdminPanel");
+                        numberOfPage = "1";
+                    }
+                    break;
+                case "Отредактировать краны":
+                    if (message.getChatId() == admin) {
+                        sendMsg(message, "Какой кран будем редактировать?", "setTapFix");
+                        numberOfPage = "2";
+                    }
+                    break;
+                case "Отредактировать \"о нас\"":
+                    if (message.getChatId() == admin) {
+                        sendMsg(message,"Какой текст будет теперь?", "aboutEdit");
+                        numberOfPage = "3";
+                    }
+                    break;
 
+                case "Назад":
+                    if (message.getChatId() == admin) {
+                        switch (numberOfPage) {
+                            case "1":
+                                sendMsg(message, "Вернулись назад", "setButtonsGeneralAdmin");
+                                break;
+                            case "2":
+                            case "3":
+                                sendMsg(message, "Вернулись назад", "setButtonsAdminPanel");
+                                break;
+                        }
+                    }
+                    break;
             }
         }
     }
 
-    public void setButtons(SendMessage sendMessage) {
-        ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
-        sendMessage.setReplyMarkup(replyKeyboardMarkup);
-        replyKeyboardMarkup.setSelective(true);
-        replyKeyboardMarkup.setResizeKeyboard(true);
-        replyKeyboardMarkup.setOneTimeKeyboard(false);
-
-        List<KeyboardRow> keyboardRowList = new ArrayList<KeyboardRow>();
-        KeyboardRow keyBoardFirstRow = new KeyboardRow();
-
-        keyBoardFirstRow.add(new KeyboardButton("🍺 на кранах" ));
-        keyBoardFirstRow.add(new KeyboardButton("\uD83C\uDFE1 о нас"));
-
-        keyboardRowList.add(keyBoardFirstRow);
-        replyKeyboardMarkup.setKeyboard(keyboardRowList);
-    }
-
+    @Override
     public String getBotUsername() {
         return "YaListBot";
     }
 
-    public void sendMsg(Message message,String text) {
+
+
+
+    public void sendMsg(Message message,String text, String nameOfKeyboard) {
         SendMessage sendMessage = new SendMessage();
         sendMessage.enableMarkdown(true);
         sendMessage.setChatId(message.getChatId().toString());
-//      sendMessage.setReplyToMessageId(message.getMessageId());
         sendMessage.setText("\n" + text);
         try {
-            setButtons(sendMessage);
-            execute(sendMessage);
+            switch (nameOfKeyboard) {
+                case "setButtonsGeneralAdmin" :
+                    keyboard.setButtonsGeneralAdmin(sendMessage);
+                    execute(sendMessage);
+                    // keyboard.clearKeyboard(sendMessage);
+                    break;
+
+                case "setButtonsGeneral" :
+                    keyboard.setButtonsGeneral(sendMessage);
+                    execute(sendMessage);
+                    // keyboard.clearKeyboard(sendMessage);
+                    break;
+
+                case "setTapFix" :
+                    keyboard.setTap(sendMessage);
+                    execute(sendMessage);
+                    // keyboard.clearKeyboard(sendMessage);
+                    break;
+
+                case "setButtonsAdminPanel" :
+                    keyboard.setButtonsAdminPanel(sendMessage);
+                    execute(sendMessage);
+                    // keyboard.clearKeyboard(sendMessage);
+                    break;
+
+                case "aboutEdit" :
+                    keyboard.aboutEdit(sendMessage);
+                    execute(sendMessage);
+                    // keyboard.clearKeyboard(sendMessage);
+                    break;
+            }
+
         }
         catch (TelegramApiException e) {
             e.printStackTrace();
         }
     }
-    public void sendMsg(Message message,ArrayList<Beer> list) {
+    public void sendMsg(Message message,ArrayList<Beer> list, String nameOfKeyboard) {
         String nextBeer = "Сегодня на кранах:" + "\n" + "\n";
 
         SendMessage sendMessage = new SendMessage();
@@ -101,14 +171,31 @@ public class Bot extends TelegramLongPollingBot {
 //        sendMessage.setReplyToMessageId(message.getMessageId());
 
         for (Beer beer: list) {
-           nextBeer += beer.getName() + "\n" + beer.getVol() + "\n" + beer.getPriceFor05() + "\n" + "\n" +"\n";
+             nextBeer += beer.toString();
         }
 
         sendMessage.setText(nextBeer);
 
         try {
-            setButtons(sendMessage);
-            execute(sendMessage);
+            switch (nameOfKeyboard) {
+                case "setButtonsGeneralAdmin" :
+                    keyboard.setButtonsGeneralAdmin(sendMessage);
+                    execute(sendMessage);
+                    // keyboard.clearKeyboard(sendMessage);
+                    break;
+
+                case "setButtonsGeneral" :
+                    keyboard.setButtonsGeneral(sendMessage);
+                    execute(sendMessage);
+                    // keyboard.clearKeyboard(sendMessage);
+                    break;
+                case "setButtonsAdminPanel" :
+                    keyboard.setButtonsAdminPanel(sendMessage);
+                    execute(sendMessage);
+                    // keyboard.clearKeyboard(sendMessage);
+                    break;
+            }
+
         }
         catch (TelegramApiException e) {
             e.printStackTrace();
@@ -132,5 +219,4 @@ public class Bot extends TelegramLongPollingBot {
             e.printStackTrace();
         }
     }
-
 }
