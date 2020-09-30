@@ -98,7 +98,7 @@ public class Keyboard {
         replyKeyboardMarkup.setKeyboard(keyboardRowList);
     }
 
-    public void aboutEdit(SendMessage sendMessage) {
+    public void edit(SendMessage sendMessage) {
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
         sendMessage.setReplyMarkup(replyKeyboardMarkup);
         replyKeyboardMarkup.setSelective(true);
@@ -114,6 +114,22 @@ public class Keyboard {
 
         keyboardRowList.add(keyBoardFirstRow);
         keyboardRowList.add(keyBoardSecondRow);
+        replyKeyboardMarkup.setKeyboard(keyboardRowList);
+    }
+
+    public void back(SendMessage sendMessage) {
+        ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
+        sendMessage.setReplyMarkup(replyKeyboardMarkup);
+        replyKeyboardMarkup.setSelective(true);
+        replyKeyboardMarkup.setResizeKeyboard(true);
+        replyKeyboardMarkup.setOneTimeKeyboard(false);
+
+        List<KeyboardRow> keyboardRowList = new ArrayList<KeyboardRow>();
+        KeyboardRow keyBoardFirstRow = new KeyboardRow();
+
+        keyBoardFirstRow.add(new KeyboardButton("Назад"));
+
+        keyboardRowList.add(keyBoardFirstRow);
         replyKeyboardMarkup.setKeyboard(keyboardRowList);
     }
 
