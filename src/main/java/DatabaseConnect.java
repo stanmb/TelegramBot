@@ -21,4 +21,13 @@ public class DatabaseConnect {
             return;
         }
     }
+    public boolean isConnected (Connection connection) {
+        boolean result = false;
+        try {
+            result = connection.isClosed();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
 }
