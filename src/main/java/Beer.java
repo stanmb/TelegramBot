@@ -1,38 +1,28 @@
-import java.util.ArrayList;
-
 public class Beer {
     private String name;
     private String vol;
-    private String priceFor05;
+    private String price;
 
-    public Beer(String name, String vol, String priceFor05) {
+    public Beer(String name, String vol, String price) {
         this.name = name;
         this.vol = vol;
-        this.priceFor05 = priceFor05;
+        this.price = price;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getVol() {
         return vol;
     }
 
-    public void setVol(String vol) {
-        this.vol = vol;
+    public String getPrice() {
+        return price;
     }
 
-
-    public String getPriceFor05() {
-        return priceFor05;
+    public String toString() {
+        return  this.getName() + "\n" + this.getVol() + "\n" + this.getPrice() + "₽" + "\n" + "\n" +"\n";
     }
 
-    public void setPriceFor05(String priceFor05) {
-        this.priceFor05 = priceFor05;
-    }
 }
