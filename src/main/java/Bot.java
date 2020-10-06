@@ -4,7 +4,9 @@ import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
+import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import org.w3c.dom.ls.LSOutput;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -29,7 +31,8 @@ public class Bot extends TelegramLongPollingBot {
         databaseConnect = new DatabaseConnect();
         databaseConnect.connectEstablish();
         list = contentKeeper.getListOfBeer1(databaseConnect.connection);
-        userList = user.getUserList(databaseConnect.connection);
+        userList = user.getUsersIds(databaseConnect.connection);
+
     }
 
 
@@ -45,12 +48,13 @@ public class Bot extends TelegramLongPollingBot {
 
         // check if the update has a message and the message has text
         if (message != null && message.hasText() && message.getChatId() == admin) {
+            System.out.println(message);
             // check if user exists in database and add if not
             if (!userList.contains(message.getChatId())) {
                 UserManager user = new UserManager(message);
                 user.userCheck(databaseConnect.connection);
                 System.out.println("Пользователь " + message.getChat().getUserName() + " добавлен!");
-                userList = this.user.getUserList(databaseConnect.connection);
+                userList = this.user.getUsersIds(databaseConnect.connection);
             }
             // read user's message and send an answer
             switch (message.getText()) {
@@ -76,11 +80,15 @@ public class Bot extends TelegramLongPollingBot {
                     numberOfPage = "2";
                     break;
 
-                case "Отредактировать \"о нас\"":
+                /*case "Отредактировать \"о нас\"":
                     sendMsg(message, "Какой текст будет теперь?", "edit");
                     numberOfPage = "3";
                     break;
-
+*/
+                case "В начало":
+                    sendMsg(message,"Вернулись на начало","setButtonsGeneralAdmin");
+                    numberOfPage = "0";
+                    break;
                 case "1":
                     sendMsg(message, "Введи Название, Алкоголь и цену через \"/\" , например:" +
                             " Kriek Boon, вишневый ламбик/4.0%/0.5 л - 300₽", "back");
@@ -116,6 +124,15 @@ public class Bot extends TelegramLongPollingBot {
                             " Kriek Boon, вишневый ламбик/4.0%/0.5 л - 300₽", "back");
                     numberOfPage = "2-6";
                     break;
+                case "Список подписчиков":
+                    ArrayList<UserManager> userList = new UserManager().getUserList(databaseConnect.connection);
+                    String stringOfUsers = "";
+                    int counter = 1;
+                    for (UserManager user :userList) {
+                        stringOfUsers += counter + ": " + user.toString() + "\n";
+                    }
+                    sendMsg(message,stringOfUsers);
+                    break;
 
                 case "Назад":
                     switch (numberOfPage) {
@@ -125,7 +142,7 @@ public class Bot extends TelegramLongPollingBot {
 
                         case "2":
                         case "3":
-                            sendMsg(message, "Вернулись назад 2 or 3", "setButtonsAdminPanel");
+                            sendMsg(message, "Вернулись назад", "setButtonsAdminPanel");
                             numberOfPage = "1";
                             break;
 
@@ -290,8 +307,20 @@ public class Bot extends TelegramLongPollingBot {
         catch (TelegramApiException e) {
             e.printStackTrace();
         }
-
     }
+        public void sendMsg(Long chatId, String text) {
+            SendMessage sendMessage = new SendMessage();
+            sendMessage.enableMarkdown(true);
+            sendMessage.setChatId(chatId.toString());
+            sendMessage.setText(text);
+            try {
+                execute(sendMessage);
+            } catch (TelegramApiException e) {
+                e.printStackTrace();
+            }
+        }
+
+
     public void sendPhoto(Message message) {
         SendPhoto sendPhoto = new SendPhoto();
         sendPhoto.setChatId(message.getChatId().toString());

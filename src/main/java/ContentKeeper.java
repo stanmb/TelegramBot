@@ -27,14 +27,16 @@ public class ContentKeeper {
     }
 
     public ArrayList<Beer> getListOfBeer1(Connection connection) {
-        String query = "SELECT * FROM beer";
+        String query = "SELECT * FROM beer ORDER BY id";
+        int counter = 0;
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(query);) {
             ResultSet resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
-                Beer beer = new Beer(resultSet.getString("name"), resultSet.getString("vol"), resultSet.getString("price"));
-                beerList.add(beer);
+                Beer beer = new Beer(resultSet.getString("name"), resultSet.getString("alc"), resultSet.getString("price"));
+                beerList.add(counter,beer);
+                counter++;
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -54,7 +56,7 @@ public class ContentKeeper {
     }
 
     public String addBeerToDatabase(Beer beer, Connection connection, String numberOfPage) {
-        String query = "UPDATE beer SET name = (?), vol = (?), price = (?) where id = (?)";
+        String query = "UPDATE beer SET name = (?), alc = (?), price = (?) where id = (?)";
         String result = beer.getName() + " " + beer.getVol() + " " + beer.getPrice() + " " + "установлено на кран # " + numberOfPage;
         try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setString(1, beer.getName());

@@ -64,8 +64,10 @@ public class Keyboard {
         KeyboardRow keyBoardSecondRow = new KeyboardRow();
 
         keyBoardFirstRow.add(new KeyboardButton("Отредактировать краны"));
-        keyBoardFirstRow.add(new KeyboardButton("Отредактировать \"о нас\""));
-        keyBoardSecondRow.add(new KeyboardButton("Назад"));
+        keyBoardFirstRow.add(new KeyboardButton("Список подписчиков"));
+       // keyBoardFirstRow.add(new KeyboardButton("Отредактировать \"о нас\""));
+       // keyBoardSecondRow.add(new KeyboardButton("Назад"));
+        keyBoardSecondRow.add(new KeyboardButton("В начало"));
 
         keyboardRowList.add(keyBoardFirstRow);
         keyboardRowList.add(keyBoardSecondRow);
@@ -91,6 +93,7 @@ public class Keyboard {
         keyBoardSecondRow.add(new KeyboardButton( "5"));
         keyBoardSecondRow.add(new KeyboardButton( "6"));
         keyBoardThirdRow.add(new KeyboardButton( "Назад"));
+        keyBoardThirdRow.add(new KeyboardButton("В начало"));
 
         keyboardRowList.add(keyBoardFirstRow);
         keyboardRowList.add(keyBoardSecondRow);
@@ -111,6 +114,7 @@ public class Keyboard {
 
         keyBoardFirstRow.add(new KeyboardButton("Ок, меняем"));
         keyBoardSecondRow.add(new KeyboardButton("Назад"));
+        keyBoardSecondRow.add(new KeyboardButton("В начало"));
 
         keyboardRowList.add(keyBoardFirstRow);
         keyboardRowList.add(keyBoardSecondRow);
@@ -128,6 +132,7 @@ public class Keyboard {
         KeyboardRow keyBoardFirstRow = new KeyboardRow();
 
         keyBoardFirstRow.add(new KeyboardButton("Назад"));
+        keyBoardFirstRow.add(new KeyboardButton("В начало"));
 
         keyboardRowList.add(keyBoardFirstRow);
         replyKeyboardMarkup.setKeyboard(keyboardRowList);
