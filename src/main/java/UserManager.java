@@ -77,6 +77,21 @@ public class UserManager {
         return  listOfIds;
     }
 
+    public int getNumberOfUsers(Connection connection) {
+        query = "SELECT * from users";
+        int result = 0;
+        try(PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                result ++;
+            }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
     @Override
     public String toString() {
         String string = "Никнейм: " + this.userName + "," + " Имя: " + this.firstName + "," + " Фамилия: " + this.lastName + "," + " Пидписался с: " + this.dateOfJoin;

@@ -26,7 +26,7 @@ public class ContentKeeper {
         return about;
     }
 
-    public ArrayList<Beer> getListOfBeer1(Connection connection) {
+    public ArrayList<Beer> getListOfBeer(Connection connection) {
         String query = "SELECT * FROM beer ORDER BY id";
         int counter = 0;
 
@@ -44,7 +44,7 @@ public class ContentKeeper {
         return beerList;
     }
 
-    public void aboutEdit(String about) {
+/*    public void aboutEdit(String about) {
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter(file));
             writer.write(about);
@@ -53,7 +53,7 @@ public class ContentKeeper {
             e.printStackTrace();
         }
 
-    }
+    }*/
 
     public String addBeerToDatabase(Beer beer, Connection connection, String numberOfPage) {
         String query = "UPDATE beer SET name = (?), alc = (?), price = (?) where id = (?)";

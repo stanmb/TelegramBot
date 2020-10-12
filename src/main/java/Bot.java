@@ -4,13 +4,10 @@ import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
-import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-import org.w3c.dom.ls.LSOutput;
 
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -23,14 +20,15 @@ public class Bot extends TelegramLongPollingBot {
     DatabaseConnect databaseConnect = null;
     Keyboard keyboard = new Keyboard();
     int admin = 361208695;
-    String numberOfPage = "0";
-    String[] pageNumbers = {"2-1","2-2","2-3", "2-4", "2-5","2-6"};
-    List<String> pageNumbersList = Arrays.asList(pageNumbers);
+    int numberOfPage = 0;
+    Integer[] pageNumbers = {3, 4, 5, 6, 7, 8};
+    List<Integer> pageNumbersList = Arrays.asList(pageNumbers);
+    String mailingText = "";
 
     Bot() {
         databaseConnect = new DatabaseConnect();
         databaseConnect.connectEstablish();
-        list = contentKeeper.getListOfBeer1(databaseConnect.connection);
+        list = contentKeeper.getListOfBeer(databaseConnect.connection);
         userList = user.getUsersIds(databaseConnect.connection);
 
     }
@@ -72,12 +70,12 @@ public class Bot extends TelegramLongPollingBot {
 
                 case "\uD83D\uDEE0 Настройки":
                     sendMsg(message, "Привет, Админ! Что будем настраивать?", "setButtonsAdminPanel");
-                    numberOfPage = "1";
+                    numberOfPage = 1;
                     break;
 
                 case "Отредактировать краны":
                     sendMsg(message, "Какой кран будем редактировать?", "setTapFix");
-                    numberOfPage = "2";
+                    numberOfPage = 2;
                     break;
 
                 /*case "Отредактировать \"о нас\"":
@@ -86,105 +84,134 @@ public class Bot extends TelegramLongPollingBot {
                     break;
 */
                 case "В начало":
-                    sendMsg(message,"Вернулись на начало","setButtonsGeneralAdmin");
-                    numberOfPage = "0";
+                    sendMsg(message, "Вернулись на начало", "setButtonsGeneralAdmin");
+                    numberOfPage = 0;
                     break;
                 case "1":
                     sendMsg(message, "Введи Название, Алкоголь и цену через \"/\" , например:" +
                             " Kriek Boon, вишневый ламбик/4.0%/0.5 л - 300₽", "back");
-                    numberOfPage = "2-1";
+                    numberOfPage = 3;
                     break;
 
                 case "2":
                     sendMsg(message, "Введи Название, Алкоголь и цену через \"/\" , например:" +
                             " Kriek Boon, вишневый ламбик/4.0%/0.5 л - 300₽", "back");
-                    numberOfPage = "2-2";
+                    numberOfPage = 4;
                     break;
 
                 case "3":
                     sendMsg(message, "Введи Название, Алкоголь и цену через \"/\" , например:" +
                             " Kriek Boon, вишневый ламбик/4.0%/0.5 л - 300₽", "back");
-                    numberOfPage = "2-3";
+                    numberOfPage = 5;
                     break;
 
                 case "4":
                     sendMsg(message, "Введи Название, Алкоголь и цену через \"/\" , например:" +
                             " Kriek Boon, вишневый ламбик/4.0%/0.5 л - 300₽", "back");
-                    numberOfPage = "2-4";
+                    numberOfPage = 6;
                     break;
 
                 case "5":
                     sendMsg(message, "Введи Название, Алкоголь и цену через \"/\" , например:" +
                             " Kriek Boon, вишневый ламбик/4.0%/0.5 л - 300₽", "back");
-                    numberOfPage = "2-5";
+                    numberOfPage = 7;
                     break;
 
                 case "6":
                     sendMsg(message, "Введи Название, Алкоголь и цену через \"/\" , например:" +
                             " Kriek Boon, вишневый ламбик/4.0%/0.5 л - 300₽", "back");
-                    numberOfPage = "2-6";
+                    numberOfPage = 8;
                     break;
                 case "Список подписчиков":
                     ArrayList<UserManager> userList = new UserManager().getUserList(databaseConnect.connection);
                     String stringOfUsers = "";
                     int counter = 1;
-                    for (UserManager user :userList) {
+                    for (UserManager user : userList) {
                         stringOfUsers += counter + ": " + user.toString() + "\n";
                     }
-                    sendMsg(message,stringOfUsers);
+                    sendMsg(message, stringOfUsers);
+                    break;
+
+                case "Сделать рассылку":
+                    sendMsg(message, "Введи текст рассылки", "sendMessageKeyboard");
+                    numberOfPage = 9;
+                    break;
+
+                case "Отправить":
+                    if (!mailingText.equals("") && numberOfPage == 10) {
+
+                        sendMsg(message, "Текст отправлен " + new UserManager().getNumberOfUsers(databaseConnect.connection)
+                                + " контакту/ам", "setButtonsGeneralAdmin");
+                        new MessageSender().sendMessage(mailingText, databaseConnect.connection);
+                        mailingText = "";
+                        numberOfPage = 0;
+                    }
+                    else {
+                        sendMsg(message, "Введи текст рассылки", "sendMessageKeyboard");
+                    }
                     break;
 
                 case "Назад":
                     switch (numberOfPage) {
-                        case "1":
+                        case 1:
                             sendMsg(message, "Вернулись назад", "setButtonsGeneralAdmin");
                             break;
 
-                        case "2":
-                        case "3":
+                        case 2:
                             sendMsg(message, "Вернулись назад", "setButtonsAdminPanel");
-                            numberOfPage = "1";
+                            numberOfPage = 1;
                             break;
 
-                        case "2-1":
-                        case "2-2":
-                        case "2-3":
-                        case "2-4":
-                        case "2-5":
-                        case "2-6":
+                        case 3:
+                        case 4:
+                        case 5:
+                        case 6:
+                        case 7:
+                        case 8:
                             sendMsg(message, "Какой кран будем редактировать?", "setTapFix");
-                            numberOfPage = "2";
+                            numberOfPage = 2;
                             break;
                     }
                     break;
 
                 default:
-                    if (pageNumbersList.contains(numberOfPage));
-                    String[] strings = null;
-                    strings = message.getText().split("/");
-                    Beer beer = new Beer(strings[0],strings[1],strings[2]);
-                    switch (numberOfPage) {
-                        case "2-1":
-                            sendMsg(message,contentKeeper.addBeerToDatabase(beer,databaseConnect.connection,"1"));
-                            break;
-                        case "2-2":
-                            sendMsg(message,contentKeeper.addBeerToDatabase(beer,databaseConnect.connection,"2"));
-                            break;
-                        case "2-3":
-                            sendMsg(message,contentKeeper.addBeerToDatabase(beer,databaseConnect.connection,"3"));
-                            break;
-                        case "2-4":
-                            sendMsg(message,contentKeeper.addBeerToDatabase(beer,databaseConnect.connection,"4"));
-                            break;
-                        case "2-5":
-                            sendMsg(message,contentKeeper.addBeerToDatabase(beer,databaseConnect.connection,"5"));
-                            break;
-                        case "2-6":
-                            sendMsg(message,contentKeeper.addBeerToDatabase(beer,databaseConnect.connection,"6"));
-                            break;
+                    if (pageNumbersList.contains(numberOfPage)) {
+                        String[] strings = null;
+                        strings = message.getText().split("/");
+                        Beer beer = new Beer(strings[0], strings[1], strings[2]);
+                        switch (numberOfPage) {
+                            case 3:
+                                sendMsg(message, contentKeeper.addBeerToDatabase(beer, databaseConnect.connection, "1"));
+                                break;
+                            case 4:
+                                sendMsg(message, contentKeeper.addBeerToDatabase(beer, databaseConnect.connection, "2"));
+                                break;
+                            case 5:
+                                sendMsg(message, contentKeeper.addBeerToDatabase(beer, databaseConnect.connection, "3"));
+                                break;
+                            case 6:
+                                sendMsg(message, contentKeeper.addBeerToDatabase(beer, databaseConnect.connection, "4"));
+                                break;
+                            case 7:
+                                sendMsg(message, contentKeeper.addBeerToDatabase(beer, databaseConnect.connection, "5"));
+                                break;
+                            case 8:
+                                sendMsg(message, contentKeeper.addBeerToDatabase(beer, databaseConnect.connection, "6"));
+                                break;
+
+                        }
+                        list.clear();
+                        list = contentKeeper.getListOfBeer(databaseConnect.connection);
                     }
-                    list.clear();
-                    list = contentKeeper.getListOfBeer1(databaseConnect.connection);
+                    else {
+                        switch (numberOfPage) {
+                            case 9:
+                                sendMsg(message, "Будет отправлен следующий текст: " + message.getText());
+                                numberOfPage = 10;
+                                mailingText = message.getText();
+                                break;
+                        }
+                    }
             }
         } else {
             switch (message.getText()) {
@@ -249,6 +276,11 @@ public class Bot extends TelegramLongPollingBot {
                     execute(sendMessage);
                     // keyboard.clearKeyboard(sendMessage);
                     break;
+                case "sendMessageKeyboard":
+                    keyboard.sendMessageKeyboard(sendMessage);
+                    execute(sendMessage);
+                    // keyboard.clearKeyboard(sendMessage);
+                    break;
             }
 
         } catch (TelegramApiException e) {
@@ -308,17 +340,17 @@ public class Bot extends TelegramLongPollingBot {
             e.printStackTrace();
         }
     }
-        public void sendMsg(Long chatId, String text) {
-            SendMessage sendMessage = new SendMessage();
-            sendMessage.enableMarkdown(true);
-            sendMessage.setChatId(chatId.toString());
-            sendMessage.setText(text);
-            try {
-                execute(sendMessage);
-            } catch (TelegramApiException e) {
-                e.printStackTrace();
-            }
+    public void sendMsg(Long chatId, String text) {
+        SendMessage sendMessage = new SendMessage();
+        sendMessage.enableMarkdown(true);
+        sendMessage.setChatId(chatId.toString());
+        sendMessage.setText(text);
+        try {
+            execute(sendMessage);
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
         }
+    }
 
 
     public void sendPhoto(Message message) {

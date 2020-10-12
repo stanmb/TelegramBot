@@ -65,6 +65,7 @@ public class Keyboard {
 
         keyBoardFirstRow.add(new KeyboardButton("Отредактировать краны"));
         keyBoardFirstRow.add(new KeyboardButton("Список подписчиков"));
+        keyBoardFirstRow.add(new KeyboardButton("Сделать рассылку"));
        // keyBoardFirstRow.add(new KeyboardButton("Отредактировать \"о нас\""));
        // keyBoardSecondRow.add(new KeyboardButton("Назад"));
         keyBoardSecondRow.add(new KeyboardButton("В начало"));
@@ -138,4 +139,23 @@ public class Keyboard {
         replyKeyboardMarkup.setKeyboard(keyboardRowList);
     }
 
+    public void sendMessageKeyboard (SendMessage sendMessage) {
+        ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
+        sendMessage.setReplyMarkup(replyKeyboardMarkup);
+        replyKeyboardMarkup.setSelective(true);
+        replyKeyboardMarkup.setResizeKeyboard(true);
+        replyKeyboardMarkup.setOneTimeKeyboard(false);
+
+        List<KeyboardRow> keyboardRowList = new ArrayList<KeyboardRow>();
+        KeyboardRow keyBoardFirstRow = new KeyboardRow();
+        KeyboardRow keyBoardSecondRow = new KeyboardRow();
+
+        keyBoardFirstRow.add(new KeyboardButton("Отправить"));
+        keyBoardSecondRow.add(new KeyboardButton("Назад"));
+        keyBoardSecondRow.add(new KeyboardButton("В начало"));
+
+        keyboardRowList.add(keyBoardFirstRow);
+        keyboardRowList.add(keyBoardSecondRow);
+        replyKeyboardMarkup.setKeyboard(keyboardRowList);
+    }
 }
