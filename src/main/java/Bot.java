@@ -16,7 +16,7 @@ public class Bot extends TelegramLongPollingBot {
     UserManager user = new UserManager();
     ArrayList<Long> userList = null;
     ContentKeeper contentKeeper = new ContentKeeper();
-    ArrayList<Beer> list = null;
+    String beerString = "";
     DatabaseConnect databaseConnect = null;
     Keyboard keyboard = new Keyboard();
     ArrayList<Long> adminsList = new ArrayList<>();
@@ -28,7 +28,7 @@ public class Bot extends TelegramLongPollingBot {
     Bot() {
         databaseConnect = new DatabaseConnect();
         databaseConnect.connectEstablish();
-        list = contentKeeper.getListOfBeer(databaseConnect.connection);
+        beerString = contentKeeper.getBeerString(contentKeeper.getListOfBeer(databaseConnect.connection));
         userList = user.getUsersIds(databaseConnect.connection);
         adminsList.add(361208695L);
     }
@@ -57,7 +57,7 @@ public class Bot extends TelegramLongPollingBot {
             // read user's message and send an answer
             switch (message.getText()) {
                 case "\uD83C\uDF7A на кранах":
-                    sendMsg(message, list, "setButtonsGeneralAdmin");
+                    sendMsg(message, beerString, "setButtonsGeneralAdmin");
                     break;
 
                 case "\uD83C\uDFE1 о нас":
@@ -78,11 +78,6 @@ public class Bot extends TelegramLongPollingBot {
                     numberOfPage = 2;
                     break;
 
-                /*case "Отредактировать \"о нас\"":
-                    sendMsg(message, "Какой текст будет теперь?", "edit");
-                    numberOfPage = "3";
-                    break;
-*/
                 case "В начало":
                     sendMsg(message, "Вернулись на начало", "setButtonsGeneralAdmin");
                     numberOfPage = 0;
@@ -204,15 +199,15 @@ public class Bot extends TelegramLongPollingBot {
                             case 8:
                                 sendMsg(message, contentKeeper.addBeerToDatabase(beer, databaseConnect.connection, "6"));
                                 break;
-
                         }
-                        list.clear();
-                        list = contentKeeper.getListOfBeer(databaseConnect.connection);
+                        contentKeeper.beerList.clear();
+                        beerString = contentKeeper.getBeerString(contentKeeper.getListOfBeer(databaseConnect.connection));
                     }
                     else {
                         switch (numberOfPage) {
                             case 9:
-                                sendMsg(message, "Будет отправлен следующий текст: " + message.getText(),"sendMessageKeyboard");
+                                sendMsg(message, "Будет отправлен следующий текст: " + message.getText(),
+                                        "sendMessageKeyboard");
                                 numberOfPage = 10;
                                 mailingText = message.getText();
                                 break;
@@ -222,7 +217,7 @@ public class Bot extends TelegramLongPollingBot {
         } else {
             switch (message.getText()) {
                 case "\uD83C\uDF7A на кранах":
-                    sendMsg(message, list, "setButtonsGeneral");
+                    sendMsg(message, beerString, "setButtonsGeneral");
                     break;
                 case "\uD83C\uDFE1 о нас":
                     sendMsg(message, about, "setButtonsGeneral");
@@ -293,46 +288,6 @@ public class Bot extends TelegramLongPollingBot {
         }
     }
 
-    public void sendMsg(Message message, ArrayList<Beer> list, String nameOfKeyboard) {
-        String nextBeer = "Сегодня на кранах:" + "\n" + "\n";
-
-        SendMessage sendMessage = new SendMessage();
-        sendMessage.enableMarkdown(true);
-        sendMessage.setChatId(message.getChatId().toString());
-//        sendMessage.setReplyToMessageId(message.getMessageId());
-
-        for (Beer beer : list) {
-            nextBeer += beer.toString();
-        }
-
-        sendMessage.setText(nextBeer);
-
-        try {
-            switch (nameOfKeyboard) {
-                case "setButtonsGeneralAdmin":
-                    keyboard.setButtonsGeneralAdmin(sendMessage);
-                    execute(sendMessage);
-                    // keyboard.clearKeyboard(sendMessage);
-                    break;
-
-                case "setButtonsGeneral":
-                    keyboard.setButtonsGeneral(sendMessage);
-                    execute(sendMessage);
-                    // keyboard.clearKeyboard(sendMessage);
-                    break;
-                case "setButtonsAdminPanel":
-                    keyboard.setButtonsAdminPanel(sendMessage);
-                    execute(sendMessage);
-                    // keyboard.clearKeyboard(sendMessage);
-                    break;
-            }
-
-        } catch (TelegramApiException e) {
-            e.printStackTrace();
-        }
-    }
-
-
     public void sendMsg(Message message, String text) {
         SendMessage sendMessage = new SendMessage();
         sendMessage.enableMarkdown(true);
@@ -352,23 +307,6 @@ public class Bot extends TelegramLongPollingBot {
         sendMessage.setText(text);
         try {
             execute(sendMessage);
-        } catch (TelegramApiException e) {
-            e.printStackTrace();
-        }
-    }
-
-
-    public void sendPhoto(Message message) {
-        SendPhoto sendPhoto = new SendPhoto();
-        sendPhoto.setChatId(message.getChatId().toString());
-        sendPhoto.setReplyToMessageId(message.getMessageId());
-        try {
-            sendPhoto.setPhoto("text", new FileInputStream("C:\\Users\\andre\\Desktop\\beer.jpg"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        try {
-            execute(sendPhoto);
         } catch (TelegramApiException e) {
             e.printStackTrace();
         }

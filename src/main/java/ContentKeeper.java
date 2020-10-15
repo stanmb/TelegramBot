@@ -110,5 +110,14 @@ public class ContentKeeper {
         return snackList;
     }
 
+    public String getBeerString(ArrayList<Beer> beerList) {
+        StringBuilder nextBeer = new StringBuilder("Сегодня на кранах:" + "\n" + "\n");
+
+        for (Beer beer : beerList) {
+            nextBeer.append(beer.toString());
+        }
+        return nextBeer.toString();
+    }
+
 }
 
