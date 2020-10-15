@@ -151,6 +151,7 @@ public class Bot extends TelegramLongPollingBot {
                     }
                     break;
 
+
                 case "Назад":
                     switch (numberOfPage) {
                         case 1:
@@ -158,6 +159,7 @@ public class Bot extends TelegramLongPollingBot {
                             break;
 
                         case 2:
+                        case 9:
                             sendMsg(message, "Вернулись назад", "setButtonsAdminPanel");
                             numberOfPage = 1;
                             break;
@@ -171,6 +173,10 @@ public class Bot extends TelegramLongPollingBot {
                             sendMsg(message, "Какой кран будем редактировать?", "setTapFix");
                             numberOfPage = 2;
                             break;
+                        case 10:
+                            mailingText = "";
+                            numberOfPage = 9;
+                            sendMsg(message,"Введи новый текст", "sendMessageKeyboard" );
                     }
                     break;
 
@@ -206,7 +212,7 @@ public class Bot extends TelegramLongPollingBot {
                     else {
                         switch (numberOfPage) {
                             case 9:
-                                sendMsg(message, "Будет отправлен следующий текст: " + message.getText());
+                                sendMsg(message, "Будет отправлен следующий текст: " + message.getText(),"sendMessageKeyboard");
                                 numberOfPage = 10;
                                 mailingText = message.getText();
                                 break;
@@ -282,7 +288,6 @@ public class Bot extends TelegramLongPollingBot {
                     // keyboard.clearKeyboard(sendMessage);
                     break;
             }
-
         } catch (TelegramApiException e) {
             e.printStackTrace();
         }
