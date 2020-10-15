@@ -1,7 +1,7 @@
 public class Snack extends ItemToSell {
     String weight;
 
-    public Snack(String name, String price,String weight) {
+    public Snack(String name, String weight,String price ) {
         super.name = name;
         super.price = price;
         this.weight = weight;

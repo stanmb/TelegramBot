@@ -201,7 +201,7 @@ public class Bot extends TelegramLongPollingBot {
                                 sendMsg(message, contentKeeper.addBeerToDatabase(beer, databaseConnect.connection, "6"));
                                 break;
                         }
-                        contentKeeper.beerList.clear();
+                       // contentKeeper.beerList.clear();
                         beerString = "Сегодня на кранах:" + "\n" + "\n" + contentKeeper
                                 .getItemsString(contentKeeper.getListOfBeer(databaseConnect.connection));
                     }

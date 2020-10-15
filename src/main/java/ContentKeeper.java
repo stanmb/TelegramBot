@@ -6,10 +6,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class ContentKeeper {
-    //all beer list initialization
-    public ArrayList<Beer> beerList = new ArrayList<Beer>();
+    // Initialization path to the About file
     File file = new File("C:\\Users\\andre\\Desktop\\about.txt");
-
     //method gets about information from file and returns it in String variable
     public String getAbout() {
         String about = "";
@@ -27,6 +25,7 @@ public class ContentKeeper {
     }
 
     public ArrayList<Beer> getListOfBeer(Connection connection) {
+        ArrayList<Beer> beerList = new ArrayList<Beer>();
         String query = "SELECT * FROM beer ORDER BY id";
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(query);) {
@@ -42,17 +41,6 @@ public class ContentKeeper {
         }
         return beerList;
     }
-
-/*    public void aboutEdit(String about) {
-        try {
-            BufferedWriter writer = new BufferedWriter(new FileWriter(file));
-            writer.write(about);
-            writer.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    }*/
 
     public String addBeerToDatabase(Beer beer, Connection connection, String numberOfPage) {
         String query = "UPDATE beer SET name = (?), alc = (?), price = (?) where id = (?)";
