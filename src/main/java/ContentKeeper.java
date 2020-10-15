@@ -110,13 +110,13 @@ public class ContentKeeper {
         return snackList;
     }
 
-    public String getBeerString(ArrayList<Beer> beerList) {
-        StringBuilder nextBeer = new StringBuilder("Сегодня на кранах:" + "\n" + "\n");
+    public <T extends  ItemToSell> String getItemsString (ArrayList<T> itemList) {
+        StringBuilder nextItem = new StringBuilder();
 
-        for (Beer beer : beerList) {
-            nextBeer.append(beer.toString());
+        for (ItemToSell item : itemList) {
+            nextItem.append(item.toString());
         }
-        return nextBeer.toString();
+        return nextItem.toString();
     }
 
 }

@@ -1,4 +1,4 @@
-public abstract class ItemToSell {
+public class ItemToSell {
      String name;
      String price;
 

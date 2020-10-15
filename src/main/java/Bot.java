@@ -1,13 +1,10 @@
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -28,7 +25,8 @@ public class Bot extends TelegramLongPollingBot {
     Bot() {
         databaseConnect = new DatabaseConnect();
         databaseConnect.connectEstablish();
-        beerString = contentKeeper.getBeerString(contentKeeper.getListOfBeer(databaseConnect.connection));
+        beerString = "Сегодня на кранах:" + "\n" + "\n" + contentKeeper.getItemsString(contentKeeper
+                .getListOfBeer(databaseConnect.connection));
         userList = user.getUsersIds(databaseConnect.connection);
         adminsList.add(361208695L);
     }
@@ -58,6 +56,9 @@ public class Bot extends TelegramLongPollingBot {
             switch (message.getText()) {
                 case "\uD83C\uDF7A на кранах":
                     sendMsg(message, beerString, "setButtonsGeneralAdmin");
+                    break;
+                case "Закуски":
+                    sendMsg(message, contentKeeper.getItemsString(contentKeeper.getListOfSnacks(databaseConnect.connection)));
                     break;
 
                 case "\uD83C\uDFE1 о нас":
@@ -201,7 +202,8 @@ public class Bot extends TelegramLongPollingBot {
                                 break;
                         }
                         contentKeeper.beerList.clear();
-                        beerString = contentKeeper.getBeerString(contentKeeper.getListOfBeer(databaseConnect.connection));
+                        beerString = "Сегодня на кранах:" + "\n" + "\n" + contentKeeper
+                                .getItemsString(contentKeeper.getListOfBeer(databaseConnect.connection));
                     }
                     else {
                         switch (numberOfPage) {
