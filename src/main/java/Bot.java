@@ -19,10 +19,10 @@ public class Bot extends TelegramLongPollingBot {
     ArrayList<Beer> list = null;
     DatabaseConnect databaseConnect = null;
     Keyboard keyboard = new Keyboard();
-    int admin = 361208695;
+    ArrayList<Long> adminsList = new ArrayList<>();
     int numberOfPage = 0;
-    Integer[] pageNumbers = {3, 4, 5, 6, 7, 8};
-    List<Integer> pageNumbersList = Arrays.asList(pageNumbers);
+    Integer[] tapEditPageNumbers = {3, 4, 5, 6, 7, 8};
+    List<Integer> pageNumbersList = Arrays.asList(tapEditPageNumbers);
     String mailingText = "";
 
     Bot() {
@@ -30,7 +30,7 @@ public class Bot extends TelegramLongPollingBot {
         databaseConnect.connectEstablish();
         list = contentKeeper.getListOfBeer(databaseConnect.connection);
         userList = user.getUsersIds(databaseConnect.connection);
-
+        adminsList.add(361208695L);
     }
 
 
@@ -45,7 +45,7 @@ public class Bot extends TelegramLongPollingBot {
         Message message = update.getMessage();
 
         // check if the update has a message and the message has text
-        if (message != null && message.hasText() && message.getChatId() == admin) {
+        if (message != null && message.hasText() && adminsList.contains(message.getChatId())) {
             System.out.println(message);
             // check if user exists in database and add if not
             if (!userList.contains(message.getChatId())) {
