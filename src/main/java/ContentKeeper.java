@@ -92,7 +92,23 @@ public class ContentKeeper {
         }
         return result.toString();
     }
+    public ArrayList<Snack> getListOfSnacks(Connection connection) {
+        String query = "SELECT * FROM snacks ORDER BY id";
+        ArrayList<Snack> snackList = new ArrayList<>();
 
+        try (PreparedStatement preparedStatement = connection.prepareStatement(query);) {
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                Snack snack = new Snack(resultSet.getString("title"), resultSet.getString("weight"),
+                        resultSet.getString("price"));
+                snackList.add(snack);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return snackList;
+    }
 
 }
 
