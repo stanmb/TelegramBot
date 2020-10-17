@@ -24,11 +24,14 @@ public class Keyboard {
 
         List<KeyboardRow> keyboardRowList = new ArrayList<KeyboardRow>();
         KeyboardRow keyBoardFirstRow = new KeyboardRow();
+        KeyboardRow keyBoardSecondRow = new KeyboardRow();
 
         keyBoardFirstRow.add(new KeyboardButton("🍺 на кранах" ));
-        keyBoardFirstRow.add(new KeyboardButton("\uD83C\uDFE1 о нас"));
+        keyBoardFirstRow.add(new KeyboardButton("\uD83E\uDD68 закуски" ));
+        keyBoardSecondRow.add(new KeyboardButton("\uD83C\uDFE1 о нас"));
 
         keyboardRowList.add(keyBoardFirstRow);
+        keyboardRowList.add(keyBoardSecondRow);
         replyKeyboardMarkup.setKeyboard(keyboardRowList);
     }
 
@@ -42,13 +45,16 @@ public class Keyboard {
         List<KeyboardRow> keyboardRowList = new ArrayList<KeyboardRow>();
         KeyboardRow keyBoardFirstRow = new KeyboardRow();
         KeyboardRow keyBoardSecondRow = new KeyboardRow();
+        KeyboardRow keyBoardThirdRow = new KeyboardRow();
 
         keyBoardFirstRow.add(new KeyboardButton("🍺 на кранах" ));
         keyBoardFirstRow.add(new KeyboardButton("\uD83C\uDFE1 о нас"));
-        keyBoardSecondRow.add(new KeyboardButton( "\uD83D\uDEE0 Настройки"));
+        keyBoardSecondRow.add(new KeyboardButton( "\uD83E\uDD68 закуски"));
+        keyBoardThirdRow.add(new KeyboardButton( "\uD83D\uDEE0 Настройки"));
 
         keyboardRowList.add(keyBoardFirstRow);
         keyboardRowList.add(keyBoardSecondRow);
+        keyboardRowList.add(keyBoardThirdRow);
         replyKeyboardMarkup.setKeyboard(keyboardRowList);
     }
 

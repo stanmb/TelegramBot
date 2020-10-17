@@ -20,7 +20,7 @@ public class Snack extends ItemToSell {
     }
 
     public String toString() {
-        return  this.getName() + "\n" + this.getWeight() + " грамм" + "\n" + this.getPrice() + "₽" + "\n" + "\n" +"\n";
+        return  this.getName() + "\n" + this.getWeight() + " грамм" + " - " + this.getPrice() + "₽" + "\n" + "\n" +"\n";
 
     }
 }

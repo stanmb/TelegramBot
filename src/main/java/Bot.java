@@ -14,6 +14,7 @@ public class Bot extends TelegramLongPollingBot {
     ArrayList<Long> userList = null;
     ContentKeeper contentKeeper = new ContentKeeper();
     String beerString = "";
+    String snackString = "";
     DatabaseConnect databaseConnect = null;
     Keyboard keyboard = new Keyboard();
     ArrayList<Long> adminsList = new ArrayList<>();
@@ -27,6 +28,8 @@ public class Bot extends TelegramLongPollingBot {
         databaseConnect.connectEstablish();
         beerString = "Сегодня на кранах:" + "\n" + "\n" + contentKeeper.getItemsString(contentKeeper
                 .getListOfBeer(databaseConnect.connection));
+        snackString = "У нас есть кое-что к пиву:" + "\n" + "\n" + contentKeeper.getItemsString(contentKeeper
+                .getListOfSnacks(databaseConnect.connection));
         userList = user.getUsersIds(databaseConnect.connection);
         adminsList.add(361208695L);
     }
@@ -45,20 +48,13 @@ public class Bot extends TelegramLongPollingBot {
         // check if the update has a message and the message has text
         if (message != null && message.hasText() && adminsList.contains(message.getChatId())) {
             System.out.println(message);
-            // check if user exists in database and add if not
-            if (!userList.contains(message.getChatId())) {
-                UserManager user = new UserManager(message);
-                user.userCheck(databaseConnect.connection);
-                System.out.println("Пользователь " + message.getChat().getUserName() + " добавлен!");
-                userList = this.user.getUsersIds(databaseConnect.connection);
-            }
             // read user's message and send an answer
             switch (message.getText()) {
                 case "\uD83C\uDF7A на кранах":
                     sendMsg(message, beerString, "setButtonsGeneralAdmin");
                     break;
-                case "Закуски":
-                    sendMsg(message, contentKeeper.getItemsString(contentKeeper.getListOfSnacks(databaseConnect.connection)));
+                case "\uD83E\uDD68 закуски":
+                    sendMsg(message,snackString,"setButtonsGeneralAdmin");
                     break;
 
                 case "\uD83C\uDFE1 о нас":
@@ -136,14 +132,15 @@ public class Bot extends TelegramLongPollingBot {
                 case "Отправить":
                     if (!mailingText.equals("") && numberOfPage == 10) {
 
-                        sendMsg(message, "Текст отправлен " + new UserManager().getNumberOfUsers(databaseConnect.connection)
-                                + " контакту/ам", "setButtonsGeneralAdmin");
                         new MessageSender().sendMessage(mailingText, databaseConnect.connection);
+                        /*sendMsg(message, "Текст отправлен " + new UserManager().getNumberOfUsers(databaseConnect.connection)
+                                + " контакту/ам", "setButtonsGeneralAdmin");*/
                         mailingText = "";
                         numberOfPage = 0;
                     }
                     else {
                         sendMsg(message, "Введи текст рассылки", "sendMessageKeyboard");
+                        numberOfPage = 9;
                     }
                     break;
 
@@ -216,6 +213,14 @@ public class Bot extends TelegramLongPollingBot {
                     }
             }
         } else {
+            // check if user exists in database and add if not
+            if (!userList.contains(message.getChatId())) {
+                UserManager user = new UserManager(message);
+                user.userCheck(databaseConnect.connection);
+                sendMsg(adminsList.get(0),"Пользователь " + message.getChat().getUserName() + " добавлен!");
+                System.out.println("Пользователь " + message.getChat().getUserName() + " добавлен!");
+                userList = this.user.getUsersIds(databaseConnect.connection);
+            }
             switch (message.getText()) {
                 case "\uD83C\uDF7A на кранах":
                     sendMsg(message, beerString, "setButtonsGeneral");
@@ -225,6 +230,9 @@ public class Bot extends TelegramLongPollingBot {
                     break;
                 case "/start":
                     sendMsg(message, "Привет!", "setButtonsGeneral");
+                    break;
+                case "\uD83E\uDD68 закуски":
+                    sendMsg(message,snackString,"setButtonsGeneral");
                     break;
             }
         }
