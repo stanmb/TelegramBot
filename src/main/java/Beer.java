@@ -1,12 +1,10 @@
-public class Beer {
-    private String name;
+public class Beer extends ItemToSell {
     private String vol;
-    private String price;
 
     public Beer(String name, String vol, String price) {
-        this.name = name;
+        super.name = name;
+        super.price = price;
         this.vol = vol;
-        this.price = price;
     }
 
     public String getName() {

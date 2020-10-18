@@ -6,10 +6,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class ContentKeeper {
-    //all beer list initialization
-    public ArrayList<Beer> beerList = new ArrayList<Beer>();
+    // Initialization path to the About file
     File file = new File("C:\\Users\\andre\\Desktop\\about.txt");
-
     //method gets about information from file and returns it in String variable
     public String getAbout() {
         String about = "";
@@ -26,14 +24,16 @@ public class ContentKeeper {
         return about;
     }
 
-    public ArrayList<Beer> getListOfBeer1(Connection connection) {
-        String query = "SELECT * FROM beer";
+    public ArrayList<Beer> getListOfBeer(Connection connection) {
+        ArrayList<Beer> beerList = new ArrayList<Beer>();
+        String query = "SELECT * FROM beer ORDER BY id";
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(query);) {
             ResultSet resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
-                Beer beer = new Beer(resultSet.getString("name"), resultSet.getString("vol"), resultSet.getString("price"));
+                Beer beer = new Beer(resultSet.getString("name"), resultSet.getString("alc"),
+                        resultSet.getString("price"));
                 beerList.add(beer);
             }
         } catch (SQLException e) {
@@ -42,20 +42,11 @@ public class ContentKeeper {
         return beerList;
     }
 
-    public void aboutEdit(String about) {
-        try {
-            BufferedWriter writer = new BufferedWriter(new FileWriter(file));
-            writer.write(about);
-            writer.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    }
-
     public String addBeerToDatabase(Beer beer, Connection connection, String numberOfPage) {
-        String query = "UPDATE beer SET name = (?), vol = (?), price = (?) where id = (?)";
-        String result = beer.getName() + " " + beer.getVol() + " " + beer.getPrice() + " " + "установлено на кран # " + numberOfPage;
+        String query = "UPDATE beer SET name = (?), alc = (?), price = (?) where id = (?)";
+        StringBuilder result = new StringBuilder();
+        result.append(beer.getName()).append("\n").append(beer.getVol()).append("\n").append(beer.getPrice()).append("\n")
+                .append("Установлено на кран # ").append(numberOfPage);
         try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setString(1, beer.getName());
             preparedStatement.setString(2, beer.getVol());
@@ -87,7 +78,34 @@ public class ContentKeeper {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return result;
+        return result.toString();
     }
+    public ArrayList<Snack> getListOfSnacks(Connection connection) {
+        String query = "SELECT * FROM snacks ORDER BY id";
+        ArrayList<Snack> snackList = new ArrayList<>();
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(query);) {
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                Snack snack = new Snack(resultSet.getString("title"), resultSet.getString("weight"),
+                        resultSet.getString("price"));
+                snackList.add(snack);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return snackList;
+    }
+
+    public <T extends  ItemToSell> String getItemsString (ArrayList<T> itemList) {
+        StringBuilder nextItem = new StringBuilder();
+
+        for (ItemToSell item : itemList) {
+            nextItem.append(item.toString());
+        }
+        return nextItem.toString();
+    }
+
 }
 
