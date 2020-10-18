@@ -4,6 +4,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class MessageSender {
@@ -12,6 +13,15 @@ public class MessageSender {
         ArrayList<UserManager> usersList = new UserManager().getUserList(connection);
         for (UserManager user :usersList) {
                 hoppyBot.sendMsg(user.getUserId(),text);
+        }
+        try {
+            hoppyBot.databaseConnect.connection.close();
+            if (hoppyBot.databaseConnect.connection.isClosed()) {
+                System.out.println("Connection closed");
+            }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
         }
         hoppyBot = null;
 
