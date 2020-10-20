@@ -32,7 +32,7 @@ public class ContentKeeper {
             ResultSet resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
-                Beer beer = new Beer(resultSet.getString("name"), resultSet.getString("alc"),
+                Beer beer = new Beer(resultSet.getString("title"), resultSet.getString("alc"),
                         resultSet.getString("price"));
                 beerList.add(beer);
             }
@@ -43,7 +43,7 @@ public class ContentKeeper {
     }
 
     public String addBeerToDatabase(Beer beer, Connection connection, String numberOfPage) {
-        String query = "UPDATE beer SET name = (?), alc = (?), price = (?) where id = (?)";
+        String query = "UPDATE beer SET title = (?), alc = (?), price = (?) where id = (?)";
         StringBuilder result = new StringBuilder();
         result.append(beer.getName()).append("\n").append(beer.getVol()).append("\n").append(beer.getPrice()).append("\n")
                 .append("Установлено на кран # ").append(numberOfPage);
