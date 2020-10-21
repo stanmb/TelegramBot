@@ -34,6 +34,11 @@ public class Bot extends TelegramLongPollingBot {
         adminsList.add(361208695L);
     }
 
+    Bot (String s) {
+        databaseConnect = new DatabaseConnect();
+        databaseConnect.connectEstablish();
+    }
+
 
     @Override
     public String getBotToken() {
@@ -42,7 +47,7 @@ public class Bot extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
-        String about = contentKeeper.getAbout();
+        String about = "contentKeeper.getAbout();";
         Message message = update.getMessage();
 
         // check if the update has a message and the message has text
@@ -119,7 +124,9 @@ public class Bot extends TelegramLongPollingBot {
                     String stringOfUsers = "";
                     int counter = 1;
                     for (UserManager user : userList) {
-                        stringOfUsers += counter + ": " + user.toString() + "\n";
+                        if (user.isSubscribed) {
+                            stringOfUsers += counter + ": " + user.toString() + "\n";
+                        }
                     }
                     sendMsg(message, stringOfUsers);
                     break;
@@ -307,6 +314,7 @@ public class Bot extends TelegramLongPollingBot {
         }
         catch (TelegramApiException e) {
             e.printStackTrace();
+
         }
     }
     public void sendMsg(Long chatId, String text) {
@@ -318,6 +326,7 @@ public class Bot extends TelegramLongPollingBot {
             execute(sendMessage);
         } catch (TelegramApiException e) {
             e.printStackTrace();
+            user.setIsSubscribedFalse(databaseConnect.connection, chatId);
         }
     }
 }

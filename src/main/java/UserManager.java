@@ -1,3 +1,4 @@
+import org.postgresql.core.SqlCommand;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.User;
 
@@ -94,9 +95,24 @@ public class UserManager {
         return result;
     }
 
+    public  void setIsSubscribedFalse(Connection connection, Long chatId) {
+        query = "UPDATE users SET is_subscribed = false where user_id = (?)";
+        System.out.println("id = " + chatId);
+
+        try(PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setLong(1,chatId);
+
+            preparedStatement.execute();
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public String toString() {
-        String string = "Никнейм: " + this.userName + "," + " Имя: " + this.firstName + "," + " Фамилия: " + this.lastName + "," + " Пидписался с: " + this.dateOfJoin;
+        String string = "Никнейм: " + this.userName + "," + " Имя: " + this.firstName + "," + " Фамилия: "
+                + this.lastName + "," + " Пидписался с: " + this.dateOfJoin;
         return string;
     }
 }

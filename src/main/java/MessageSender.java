@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 public class MessageSender {
     public void sendMessage(String text, Connection connection) {
-        Bot hoppyBot = new Bot();
+        Bot hoppyBot = new Bot("");
         ArrayList<UserManager> usersList = new UserManager().getUserList(connection);
         for (UserManager user :usersList) {
                 hoppyBot.sendMsg(user.getUserId(),text);
