@@ -47,7 +47,7 @@ public class Bot extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
-        String about = "contentKeeper.getAbout();";
+        String about = contentKeeper.getAbout();
         Message message = update.getMessage();
 
         // check if the update has a message and the message has text
