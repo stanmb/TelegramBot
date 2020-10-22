@@ -19,7 +19,7 @@ public class Main {
         }
         System.out.println("HoppyBot successfully started!");
 
-        Bot hoppyBot = new Bot();
+        Bot hoppyBot = new Bot("");
         hoppyBot.sendMsg(361208695L,"HoppyBot successfully started!");
         try {
             hoppyBot.databaseConnect.connection.close();

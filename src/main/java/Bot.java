@@ -34,7 +34,7 @@ public class Bot extends TelegramLongPollingBot {
         userList = user.getUsersIds(databaseConnect.connection);
         adminsList.add(361208695L);
        // adminsList.add(337817426L);
-
+        setUpTimer();
     }
 
     Bot (String s) {
@@ -50,21 +50,8 @@ public class Bot extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
-
-
-
-
         String about = contentKeeper.getAbout();
         Message message = update.getMessage();
-
-            Timer t = new Timer();
-        t.scheduleAtFixedRate(new TimerTask() {
-                public void run() {
-                     sendCounters();
-                    System.out.println("sent");
-                }
-            }, 10000, 10000);
-
 
         // check if the update has a message and the message has text
         if (message != null && message.hasText() && adminsList.contains(message.getChatId())) {
@@ -370,5 +357,14 @@ public class Bot extends TelegramLongPollingBot {
         counterAbout = 0;
         counterBeer = 0;
         counterSnacks = 0;
+    }
+    public void setUpTimer() {
+        Timer t = new Timer();
+        t.scheduleAtFixedRate(new TimerTask() {
+            public void run() {
+                sendCounters();
+                System.out.println("sent");
+            }
+        }, 10000, 10000);
     }
 }
