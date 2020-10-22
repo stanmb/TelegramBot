@@ -15,7 +15,8 @@ public class ContentKeeper {
         String about = "";
         String nextLine;
         try {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream("/resources/about")));
+            BufferedReader reader = new BufferedReader(new InputStreamReader
+                    (getClass().getResourceAsStream("about.txt"),"UTF8"));
             while ((nextLine = reader.readLine()) != null) {
                 about += nextLine;
                 about += "\n" + "\n" + "\n";
