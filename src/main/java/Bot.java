@@ -1,8 +1,8 @@
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
-
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.util.ArrayList;
@@ -150,9 +150,8 @@ public class Bot extends TelegramLongPollingBot {
                         numberOfPage = 9;
                     }
                     break;
-
-
-
+                case "Фото":
+                    sendPhoto(message);
 
                 case "Назад":
                     switch (numberOfPage) {
@@ -329,6 +328,18 @@ public class Bot extends TelegramLongPollingBot {
         } catch (TelegramApiException e) {
             e.printStackTrace();
             user.setIsSubscribedFalse(databaseConnect.connection, chatId);
+        }
+    }
+    public void sendPhoto(Message message) {
+        SendPhoto sendPhoto = new SendPhoto();
+        sendPhoto.setChatId(message.getChatId().toString());
+        sendPhoto.setPhoto("name", this.getClass().getResourceAsStream("img.jpg"));
+        try {
+            execute(sendPhoto);
+        }
+        catch (TelegramApiException e) {
+            e.printStackTrace();
+
         }
     }
 }
