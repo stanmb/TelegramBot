@@ -5,9 +5,7 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class Bot extends TelegramLongPollingBot {
     UserManager user = new UserManager();
@@ -22,6 +20,9 @@ public class Bot extends TelegramLongPollingBot {
     Integer[] tapEditPageNumbers = {3, 4, 5, 6, 7, 8};
     List<Integer> pageNumbersList = Arrays.asList(tapEditPageNumbers);
     String mailingText = "";
+    int counterBeer = 0;
+    int counterSnacks = 0;
+    int counterAbout = 0;
 
     Bot() {
         databaseConnect = new DatabaseConnect();
@@ -32,7 +33,8 @@ public class Bot extends TelegramLongPollingBot {
                 .getListOfSnacks(databaseConnect.connection));
         userList = user.getUsersIds(databaseConnect.connection);
         adminsList.add(361208695L);
-        adminsList.add(337817426L);
+       // adminsList.add(337817426L);
+
     }
 
     Bot (String s) {
@@ -48,8 +50,21 @@ public class Bot extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
+
+
+
+
         String about = contentKeeper.getAbout();
         Message message = update.getMessage();
+
+            Timer t = new Timer();
+        t.scheduleAtFixedRate(new TimerTask() {
+                public void run() {
+                     sendCounters();
+                    System.out.println("sent");
+                }
+            }, 10000, 10000);
+
 
         // check if the update has a message and the message has text
         if (message != null && message.hasText() && adminsList.contains(message.getChatId())) {
@@ -58,13 +73,16 @@ public class Bot extends TelegramLongPollingBot {
             switch (message.getText()) {
                 case "\uD83C\uDF7A на кранах":
                     sendMsg(message, beerString, "setButtonsGeneralAdmin");
+                    counterBeer++;
                     break;
                 case "\uD83E\uDD68 закуски":
                     sendMsg(message,snackString,"setButtonsGeneralAdmin");
+                    counterSnacks++;
                     break;
 
                 case "\uD83C\uDFE1 о нас":
                     sendMsg(message, about, "setButtonsGeneralAdmin");
+                    counterAbout++;
                     break;
 
                 case "/start":
@@ -343,5 +361,14 @@ public class Bot extends TelegramLongPollingBot {
             e.printStackTrace();
 
         }
+    }
+    public void sendCounters () {
+        for (Long admin :adminsList) {
+            sendMsg(admin,"Число запросов кранов: " + counterBeer + "\n" + "Число запросов закусок: " + counterSnacks
+                    + "\n" + "Число запросов О нас: " + counterAbout);
+        }
+        counterAbout = 0;
+        counterBeer = 0;
+        counterSnacks = 0;
     }
 }
