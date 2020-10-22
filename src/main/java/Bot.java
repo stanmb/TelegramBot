@@ -32,6 +32,7 @@ public class Bot extends TelegramLongPollingBot {
                 .getListOfSnacks(databaseConnect.connection));
         userList = user.getUsersIds(databaseConnect.connection);
         adminsList.add(361208695L);
+        adminsList.add(337817426L);
     }
 
     Bot (String s) {
@@ -334,6 +335,7 @@ public class Bot extends TelegramLongPollingBot {
         SendPhoto sendPhoto = new SendPhoto();
         sendPhoto.setChatId(message.getChatId().toString());
         sendPhoto.setPhoto("name", this.getClass().getResourceAsStream("img.jpg"));
+        sendPhoto.setCaption("Тут добавим описание");
         try {
             execute(sendPhoto);
         }
