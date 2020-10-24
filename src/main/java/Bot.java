@@ -9,7 +9,6 @@ import java.util.*;
 
 public class Bot extends TelegramLongPollingBot {
     UserManager user = new UserManager();
-    ArrayList<Long> userList = null;
     ContentKeeper contentKeeper = new ContentKeeper();
     String beerString = "";
     String snackString = "";
@@ -24,6 +23,7 @@ public class Bot extends TelegramLongPollingBot {
     int counterSnacks = 0;
     int counterAbout = 0;
     HashMap<Long,Boolean> userMap = null;
+    String about = "";
 
     Bot() {
         databaseConnect = new DatabaseConnect();
@@ -32,11 +32,11 @@ public class Bot extends TelegramLongPollingBot {
                 .getListOfBeer(databaseConnect.connection));
         snackString = "У нас есть кое-что к пиву:" + "\n" + "\n" + contentKeeper.getItemsString(contentKeeper
                 .getListOfSnacks(databaseConnect.connection));
-        userList = user.getUsersIds(databaseConnect.connection);
         userMap = user.getUsersIdAndSub(databaseConnect.connection);
         adminsList.add(361208695L);
-     //   adminsList.add(337817426L);
-        // setUpTimer();
+        adminsList.add(337817426L);
+        setUpTimer();
+        about = contentKeeper.getAbout();
     }
 
     Bot (String s) {
@@ -47,12 +47,11 @@ public class Bot extends TelegramLongPollingBot {
 
     @Override
     public String getBotToken() {
-        return "1206497799:AAHaD_piNaWl-MoJa5NZHRSicSMvZsb2Wp0";
+        return "1015857081:AAGljlDavk22kCwKFIJslvXfoJzRiEOPc-E";
     }
 
     @Override
     public void onUpdateReceived(Update update) {
-        String about = contentKeeper.getAbout();
         Message message = update.getMessage();
 
         // check if the update has a message and the message has text
@@ -245,7 +244,6 @@ public class Bot extends TelegramLongPollingBot {
                         user.userCheck(databaseConnect.connection);
                         sendMsg(adminsList.get(0),"Пользователь " + message.getChat().getUserName() + " добавлен!");
                         System.out.println("Пользователь " + message.getChat().getUserName() + " добавлен!");
-                        userList = this.user.getUsersIds(databaseConnect.connection);
                         sendPhoto(message);
                     }
                     // check if user's is_subscribes status equals false and set it to true if yes
@@ -266,7 +264,7 @@ public class Bot extends TelegramLongPollingBot {
 
     @Override
     public String getBotUsername() {
-        return "YaListBot";
+        return "HoppyCraftBarBot";
     }
 
 

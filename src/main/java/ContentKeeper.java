@@ -91,8 +91,7 @@ public class ContentKeeper {
             ResultSet resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
-                Snack snack = new Snack(resultSet.getString("title"), resultSet.getString("weight"),
-                        resultSet.getString("price"));
+                Snack snack = new Snack(resultSet.getString("title"),resultSet.getString("price"));
                 snackList.add(snack);
             }
         } catch (SQLException e) {
