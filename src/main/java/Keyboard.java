@@ -1,4 +1,5 @@
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardRemove;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
@@ -18,6 +19,26 @@ public class Keyboard {
     public void setButtonsGeneral(SendMessage sendMessage) {
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
         sendMessage.setReplyMarkup(replyKeyboardMarkup);
+        replyKeyboardMarkup.setSelective(true);
+        replyKeyboardMarkup.setResizeKeyboard(true);
+        replyKeyboardMarkup.setOneTimeKeyboard(false);
+
+        List<KeyboardRow> keyboardRowList = new ArrayList<KeyboardRow>();
+        KeyboardRow keyBoardFirstRow = new KeyboardRow();
+        KeyboardRow keyBoardSecondRow = new KeyboardRow();
+
+        keyBoardFirstRow.add(new KeyboardButton("🍺 на кранах" ));
+        keyBoardFirstRow.add(new KeyboardButton("\uD83E\uDD68 закуски" ));
+        keyBoardSecondRow.add(new KeyboardButton("\uD83C\uDFE1 о нас"));
+
+        keyboardRowList.add(keyBoardFirstRow);
+        keyboardRowList.add(keyBoardSecondRow);
+        replyKeyboardMarkup.setKeyboard(keyboardRowList);
+    }
+
+    public void setButtonsGeneral(SendPhoto sendPhoto) {
+        ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
+        sendPhoto.setReplyMarkup(replyKeyboardMarkup);
         replyKeyboardMarkup.setSelective(true);
         replyKeyboardMarkup.setResizeKeyboard(true);
         replyKeyboardMarkup.setOneTimeKeyboard(false);

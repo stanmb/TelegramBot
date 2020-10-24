@@ -19,7 +19,7 @@ public class ContentKeeper {
                     (getClass().getResourceAsStream("about.txt"),"UTF8"));
             while ((nextLine = reader.readLine()) != null) {
                 about += nextLine;
-                about += "\n" + "\n" + "\n";
+                about += "\n" + "\n";
             }
         } catch (Exception e) {
             e.printStackTrace();

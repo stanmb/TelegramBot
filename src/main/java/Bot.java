@@ -23,6 +23,7 @@ public class Bot extends TelegramLongPollingBot {
     int counterBeer = 0;
     int counterSnacks = 0;
     int counterAbout = 0;
+    HashMap<Long,Boolean> userMap = null;
 
     Bot() {
         databaseConnect = new DatabaseConnect();
@@ -32,9 +33,10 @@ public class Bot extends TelegramLongPollingBot {
         snackString = "У нас есть кое-что к пиву:" + "\n" + "\n" + contentKeeper.getItemsString(contentKeeper
                 .getListOfSnacks(databaseConnect.connection));
         userList = user.getUsersIds(databaseConnect.connection);
+        userMap = user.getUsersIdAndSub(databaseConnect.connection);
         adminsList.add(361208695L);
-       // adminsList.add(337817426L);
-        setUpTimer();
+     //   adminsList.add(337817426L);
+        // setUpTimer();
     }
 
     Bot (String s) {
@@ -132,6 +134,7 @@ public class Bot extends TelegramLongPollingBot {
                     for (UserManager user : userList) {
                         if (user.isSubscribed) {
                             stringOfUsers += counter + ": " + user.toString() + "\n";
+                            counter++;
                         }
                     }
                     sendMsg(message, stringOfUsers);
@@ -146,10 +149,11 @@ public class Bot extends TelegramLongPollingBot {
                     if (!mailingText.equals("") && numberOfPage == 10) {
 
                         new MessageSender().sendMessage(mailingText, databaseConnect.connection);
-                        /*sendMsg(message, "Текст отправлен " + new UserManager().getNumberOfUsers(databaseConnect.connection)
-                                + " контакту/ам", "setButtonsGeneralAdmin");*/
+                        sendMsg(message, "Текст отправлен " + new UserManager().getNumberOfUsers(databaseConnect.connection)
+                                + " контакту/ам", "setButtonsGeneralAdmin");
                         mailingText = "";
                         numberOfPage = 0;
+                        userMap = user.getUsersIdAndSub(databaseConnect.connection);
                     }
                     else {
                         sendMsg(message, "Введи текст рассылки", "sendMessageKeyboard");
@@ -227,14 +231,6 @@ public class Bot extends TelegramLongPollingBot {
                     }
             }
         } else {
-            // check if user exists in database and add if not
-            if (!userList.contains(message.getChatId())) {
-                UserManager user = new UserManager(message);
-                user.userCheck(databaseConnect.connection);
-                sendMsg(adminsList.get(0),"Пользователь " + message.getChat().getUserName() + " добавлен!");
-                System.out.println("Пользователь " + message.getChat().getUserName() + " добавлен!");
-                userList = this.user.getUsersIds(databaseConnect.connection);
-            }
             switch (message.getText()) {
                 case "\uD83C\uDF7A на кранах":
                     sendMsg(message, beerString, "setButtonsGeneral");
@@ -243,7 +239,23 @@ public class Bot extends TelegramLongPollingBot {
                     sendMsg(message, about, "setButtonsGeneral");
                     break;
                 case "/start":
-                    sendMsg(message, "Привет!", "setButtonsGeneral");
+                    // check if user exists in database and add if not. Send the welcoming photo
+                    if (!userMap.containsKey(message.getChatId())) {
+                        UserManager user = new UserManager(message);
+                        user.userCheck(databaseConnect.connection);
+                        sendMsg(adminsList.get(0),"Пользователь " + message.getChat().getUserName() + " добавлен!");
+                        System.out.println("Пользователь " + message.getChat().getUserName() + " добавлен!");
+                        userList = this.user.getUsersIds(databaseConnect.connection);
+                        sendPhoto(message);
+                    }
+                    // check if user's is_subscribes status equals false and set it to true if yes
+                    else if (userMap.get(message.getChatId()).equals(false)) {
+                        user.setIsSubscribedTrue(databaseConnect.connection,message.getChatId());
+                    }
+                    // if we have the contact in DB send plane text without photo
+                    if (userMap.containsKey(message.getChatId()))
+                        sendMsg(message, "Добро пожаловать в Hoppy craft bar!", "setButtonsGeneral");
+
                     break;
                 case "\uD83E\uDD68 закуски":
                     sendMsg(message,snackString,"setButtonsGeneral");
@@ -339,8 +351,9 @@ public class Bot extends TelegramLongPollingBot {
     public void sendPhoto(Message message) {
         SendPhoto sendPhoto = new SendPhoto();
         sendPhoto.setChatId(message.getChatId().toString());
+        keyboard.setButtonsGeneral(sendPhoto);
         sendPhoto.setPhoto("name", this.getClass().getResourceAsStream("img.jpg"));
-        sendPhoto.setCaption("Тут добавим описание");
+        sendPhoto.setCaption("Добро пожаловать в Hoppy craft bar!");
         try {
             execute(sendPhoto);
         }
@@ -365,6 +378,6 @@ public class Bot extends TelegramLongPollingBot {
                 sendCounters();
                 System.out.println("sent");
             }
-        }, 10000, 10000);
+        }, 1000 * 60 * 60 * 24, 1000 * 60 * 60 * 24);
     }
 }
