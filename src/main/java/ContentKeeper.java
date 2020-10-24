@@ -8,15 +8,18 @@ import java.util.ArrayList;
 public class ContentKeeper {
     // Initialization path to the About file
     File file = new File("C:\\Users\\andre\\Desktop\\about.txt");
+
+
     //method gets about information from file and returns it in String variable
     public String getAbout() {
         String about = "";
         String nextLine;
         try {
-            BufferedReader reader = new BufferedReader(new FileReader(file));
+            BufferedReader reader = new BufferedReader(new InputStreamReader
+                    (getClass().getResourceAsStream("about.txt"),"UTF8"));
             while ((nextLine = reader.readLine()) != null) {
                 about += nextLine;
-                about += "\n" + "\n" + "\n";
+                about += "\n" + "\n";
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -88,8 +91,7 @@ public class ContentKeeper {
             ResultSet resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
-                Snack snack = new Snack(resultSet.getString("title"), resultSet.getString("weight"),
-                        resultSet.getString("price"));
+                Snack snack = new Snack(resultSet.getString("title"),resultSet.getString("price"));
                 snackList.add(snack);
             }
         } catch (SQLException e) {

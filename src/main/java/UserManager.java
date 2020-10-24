@@ -1,12 +1,15 @@
+import org.postgresql.core.SqlCommand;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.User;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class UserManager {
 
-    long userId = 0;
+    private long userId = 0;
     String firstName = null;
     String lastName = null;
     String userName = null;
@@ -78,13 +81,21 @@ public class UserManager {
         }
         return  listOfIds;
     }
+    public HashMap<Long,Boolean> getUsersIdAndSub(Connection connection) {
+        HashMap<Long,Boolean> usersIdHashMap = new HashMap<Long,Boolean>();
+        ArrayList<UserManager> users = new UserManager().getUserList(connection);
+        for (UserManager user :users) {
+            usersIdHashMap.put(user.userId,user.isSubscribed);
+        }
+        return  usersIdHashMap;
+    }
 
     public int getNumberOfUsers(Connection connection) {
         query = "SELECT * from users";
         int result = 0;
         try(PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             ResultSet resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
+            while (resultSet.next() && resultSet.getBoolean("is_subscribed") == true) {
                 result ++;
             }
         }
@@ -94,9 +105,35 @@ public class UserManager {
         return result;
     }
 
+    public  void setIsSubscribedFalse(Connection connection, Long chatId) {
+        query = "UPDATE users SET is_subscribed = false where user_id = (?)";
+
+        try(PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setLong(1,chatId);
+
+            preparedStatement.execute();
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    public  void setIsSubscribedTrue(Connection connection, Long chatId) {
+        query = "UPDATE users SET is_subscribed = true where user_id = (?)";
+
+        try(PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setLong(1,chatId);
+
+            preparedStatement.execute();
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public String toString() {
-        String string = "Никнейм: " + this.userName + "," + " Имя: " + this.firstName + "," + " Фамилия: " + this.lastName + "," + " Пидписался с: " + this.dateOfJoin;
+        String string = "Никнейм: " + this.userName + "," + " Имя: " + this.firstName + "," + " Фамилия: "
+                + this.lastName + "," + " Пидписался с: " + this.dateOfJoin;
         return string;
     }
 }
