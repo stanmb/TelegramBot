@@ -95,7 +95,7 @@ public class UserManager {
         int result = 0;
         try(PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             ResultSet resultSet = preparedStatement.executeQuery();
-            while (resultSet.next() && resultSet.getBoolean("is_subscribed") == true) {
+            while (resultSet.next() && resultSet.getBoolean("is_subscribed")) {
                 result ++;
             }
         }

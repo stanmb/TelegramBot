@@ -31,7 +31,8 @@ public class Bot extends TelegramLongPollingBot {
         beerString = "Сегодня на кранах:" + "\n" + "\n" + contentKeeper.getItemsString(contentKeeper
                 .getListOfBeer(databaseConnect.connection));
         snackString = "У нас есть кое-что к пиву:" + "\n" + "\n" + contentKeeper.getItemsString(contentKeeper
-                .getListOfSnacks(databaseConnect.connection));
+                .getListOfSnacks(databaseConnect.connection)) + "\n"
+                + "P.S. Вы всегда можете заказать доставку еды в наш бар из любого заведения";
         userMap = user.getUsersIdAndSub(databaseConnect.connection);
         adminsList.add(361208695L);
         adminsList.add(337817426L);
@@ -56,7 +57,7 @@ public class Bot extends TelegramLongPollingBot {
 
         // check if the update has a message and the message has text
         if (message != null && message.hasText() && adminsList.contains(message.getChatId())) {
-            System.out.println(message);
+            System.out.println(message.getChat().getUserName() + " написал: " + message.getText());
             // read user's message and send an answer
             switch (message.getText()) {
                 case "\uD83C\uDF7A на кранах":
@@ -74,7 +75,7 @@ public class Bot extends TelegramLongPollingBot {
                     break;
 
                 case "/start":
-                    sendMsg(message, "Привет!", "setButtonsGeneralAdmin");
+                    sendPhoto(message);
                     break;
 
                 case "\uD83D\uDEE0 Настройки":
@@ -230,6 +231,7 @@ public class Bot extends TelegramLongPollingBot {
                     }
             }
         } else {
+            System.out.println(message.getChat().getUserName() + " написал: " + message.getText());
             switch (message.getText()) {
                 case "\uD83C\uDF7A на кранах":
                     sendMsg(message, beerString, "setButtonsGeneral");
@@ -251,10 +253,11 @@ public class Bot extends TelegramLongPollingBot {
                         user.setIsSubscribedTrue(databaseConnect.connection,message.getChatId());
                     }
                     // if we have the contact in DB send plane text without photo
-                    if (userMap.containsKey(message.getChatId()))
+                    if (userMap.containsKey(message.getChatId())) {
                         sendMsg(message, "Добро пожаловать в Hoppy craft bar!", "setButtonsGeneral");
-
+                    }
                     break;
+
                 case "\uD83E\uDD68 закуски":
                     sendMsg(message,snackString,"setButtonsGeneral");
                     break;

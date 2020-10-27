@@ -6,20 +6,24 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class ContentKeeper {
-    // Initialization path to the About file
-    File file = new File("C:\\Users\\andre\\Desktop\\about.txt");
-
 
     //method gets about information from file and returns it in String variable
     public String getAbout() {
         String about = "";
         String nextLine;
+        int counter = 0;
         try {
             BufferedReader reader = new BufferedReader(new InputStreamReader
                     (getClass().getResourceAsStream("about.txt"),"UTF8"));
             while ((nextLine = reader.readLine()) != null) {
                 about += nextLine;
-                about += "\n" + "\n";
+                if (1 < counter && counter < 6) {
+                    about += "\n";
+                }
+                else {
+                    about += "\n" + "\n";
+                }
+                counter++;
             }
         } catch (Exception e) {
             e.printStackTrace();
