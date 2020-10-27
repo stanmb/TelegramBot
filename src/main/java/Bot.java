@@ -346,7 +346,9 @@ public class Bot extends TelegramLongPollingBot {
             execute(sendMessage);
         } catch (TelegramApiException e) {
             e.printStackTrace();
-            user.setIsSubscribedFalse(databaseConnect.connection, chatId);
+            if (!adminsList.contains(chatId)) {
+                user.setIsSubscribedFalse(databaseConnect.connection, chatId);
+            }
         }
     }
     public void sendPhoto(Message message) {
@@ -377,7 +379,6 @@ public class Bot extends TelegramLongPollingBot {
         t.scheduleAtFixedRate(new TimerTask() {
             public void run() {
                 sendCounters();
-                System.out.println("sent");
             }
         }, 1000 * 60 * 60 * 24, 1000 * 60 * 60 * 24);
     }
