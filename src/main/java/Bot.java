@@ -5,6 +5,8 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.*;
 
 public class Bot extends TelegramLongPollingBot {
@@ -48,7 +50,7 @@ public class Bot extends TelegramLongPollingBot {
 
     @Override
     public String getBotToken() {
-        return "";
+        return "1206497799:AAHaD_piNaWl-MoJa5NZHRSicSMvZsb2Wp0";
     }
 
     @Override
@@ -149,7 +151,8 @@ public class Bot extends TelegramLongPollingBot {
                     if (!mailingText.equals("") && numberOfPage == 10) {
 
                         new MessageSender().sendMessage(mailingText, databaseConnect.connection);
-                        sendMsg(message, "Текст отправлен " + new UserManager().getNumberOfUsers(databaseConnect.connection)
+                        sendMsg(message, "Текст отправлен " + new UserManager()
+                                .getNumberOfUsers(databaseConnect.connection)
                                 + " контакту/ам", "setButtonsGeneralAdmin");
                         mailingText = "";
                         numberOfPage = 0;
@@ -162,6 +165,7 @@ public class Bot extends TelegramLongPollingBot {
                     break;
                 case "Фото":
                     sendPhoto(message);
+                    break;
 
                 case "Назад":
                     switch (numberOfPage) {
@@ -267,7 +271,7 @@ public class Bot extends TelegramLongPollingBot {
 
     @Override
     public String getBotUsername() {
-        return "";
+        return "YaListBot";
     }
 
 
@@ -370,16 +374,22 @@ public class Bot extends TelegramLongPollingBot {
             sendMsg(admin,"Число запросов кранов: " + counterBeer + "\n" + "Число запросов закусок: " + counterSnacks
                     + "\n" + "Число запросов О нас: " + counterAbout);
         }
-        counterAbout = 0;
-        counterBeer = 0;
-        counterSnacks = 0;
+
     }
+
     public void setUpTimer() {
         Timer t = new Timer();
         t.scheduleAtFixedRate(new TimerTask() {
             public void run() {
-                sendCounters();
+                LocalTime time1 = LocalTime.of(17,00);
+                LocalTime time2 = LocalTime.of(18,00);
+                ZoneId z = ZoneId.of("Europe/Moscow");
+                LocalTime now = LocalTime.now(z);
+                Runnable runnable = new Counter(counterBeer,counterSnacks,counterAbout,databaseConnect.connection);
+                if (now.isAfter(time1) && now.isBefore(time2)) {
+                    runnable.run();
+                }
             }
-        }, 1000 * 60 * 60 * 24, 1000 * 60 * 60 * 24);
+        }, 0, 10000);
     }
 }
