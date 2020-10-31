@@ -23,18 +23,11 @@ public class Counter implements Runnable {
         switch (this.method) {
             case ADM:
                 sendCountersToAdmins(connection);
+                clearDB(connection);
                 break;
             case BD:
                 sendCountersToDB(beer,snacks,about,connection);
                 break;
-            case CLEAR:
-                clearDB(connection);
-        }
-        if (method.equals(Method.ADM)) {
-            sendCountersToAdmins(connection);
-        }
-        else {
-            sendCountersToDB(beer,snacks,about,connection);
         }
     }
 
@@ -42,7 +35,7 @@ public class Counter implements Runnable {
         int beer = 0;
         int snacks = 0;
         int about = 0;
-        long[] adminIds = {361208695L};
+        long[] adminIds = {361208695L,337817426L};
         String query = "SELECT * FROM counters_data where id = 1";
         try(PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -61,9 +54,24 @@ public class Counter implements Runnable {
         }
     }
     public void sendCountersToDB(int beer, int snacks, int about, Connection connection) {
-        
+        String query = "UPDATE counters_data SET beer = beer + (?), snacks = snacks + (?), about = about + (?)";
+        try(PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setInt(1,beer);
+            preparedStatement.setInt(2,snacks);
+            preparedStatement.setInt(3,about);
+            preparedStatement.execute();
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
     public void clearDB(Connection connection) {
-        
+        String query = "UPDATE counters_data SET beer = 0, snacks = 0, about = 0";
+        try(PreparedStatement preparedStatement = connection.prepareStatement(query)){
+            preparedStatement.execute();
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

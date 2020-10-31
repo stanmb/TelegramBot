@@ -383,17 +383,23 @@ public class Bot extends TelegramLongPollingBot {
             public void run() {
                 Method sentToAdm = Method.ADM;
                 Method sentToBD = Method.BD;
-                Method clearBD = Method.CLEAR;
-                LocalTime time1 = LocalTime.of(17,00);
-                LocalTime time2 = LocalTime.of(18,00);
+                LocalTime time1 = LocalTime.of(22,00);
+                LocalTime time2 = LocalTime.of(23,00);
                 ZoneId z = ZoneId.of("Europe/Moscow");
                 LocalTime now = LocalTime.now(z);
                 Runnable runnable = new Counter(counterBeer,counterSnacks,counterAbout,databaseConnect.connection,
                         sentToBD);
+                runnable.run();
                 if (now.isAfter(time1) && now.isBefore(time2)) {
-                    runnable.run();
+                    Runnable sendToAdm = new Counter(counterBeer,counterSnacks,counterAbout,databaseConnect.connection,
+                            sentToAdm);
+                    sendToAdm.run();
+
                 }
+                counterAbout = 0;
+                counterSnacks = 0;
+                counterBeer = 0;
             }
-        }, 0, 10000);
+        }, 0, 1000 * 60 * 60);
     }
 }
