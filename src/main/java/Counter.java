@@ -8,19 +8,29 @@ public class Counter implements Runnable {
     int snacks;
     int about;
     Connection connection;
-    boolean isSentToAdmins;
+    Method method;
 
-    public Counter(int beer, int snacks, int about, Connection connection, boolean isSentToAdmins) {
+    public Counter(int beer, int snacks, int about, Connection connection, Method method) {
         this.beer = beer;
         this.snacks = snacks;
         this.about = about;
         this.connection = connection;
-        this.isSentToAdmins = isSentToAdmins;
+        this.method = method;
     }
 
     @Override
     public void run() {
-        if (this.isSentToAdmins) {
+        switch (this.method) {
+            case ADM:
+                sendCountersToAdmins(connection);
+                break;
+            case BD:
+                sendCountersToDB(beer,snacks,about,connection);
+                break;
+            case CLEAR:
+                clearDB(connection);
+        }
+        if (method.equals(Method.ADM)) {
             sendCountersToAdmins(connection);
         }
         else {
@@ -51,6 +61,9 @@ public class Counter implements Runnable {
         }
     }
     public void sendCountersToDB(int beer, int snacks, int about, Connection connection) {
+        
+    }
+    public void clearDB(Connection connection) {
         
     }
 }

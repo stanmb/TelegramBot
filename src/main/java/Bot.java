@@ -381,11 +381,15 @@ public class Bot extends TelegramLongPollingBot {
         Timer t = new Timer();
         t.scheduleAtFixedRate(new TimerTask() {
             public void run() {
+                Method sentToAdm = Method.ADM;
+                Method sentToBD = Method.BD;
+                Method clearBD = Method.CLEAR;
                 LocalTime time1 = LocalTime.of(17,00);
                 LocalTime time2 = LocalTime.of(18,00);
                 ZoneId z = ZoneId.of("Europe/Moscow");
                 LocalTime now = LocalTime.now(z);
-                Runnable runnable = new Counter(counterBeer,counterSnacks,counterAbout,databaseConnect.connection);
+                Runnable runnable = new Counter(counterBeer,counterSnacks,counterAbout,databaseConnect.connection,
+                        sentToBD);
                 if (now.isAfter(time1) && now.isBefore(time2)) {
                     runnable.run();
                 }
