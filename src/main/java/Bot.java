@@ -140,6 +140,7 @@ public class Bot extends TelegramLongPollingBot {
                         }
                     }
                     sendMsg(message, stringOfUsers);
+                    System.out.println(stringOfUsers);
                     break;
 
                 case "Сделать рассылку":
@@ -248,8 +249,8 @@ public class Bot extends TelegramLongPollingBot {
                     if (!userMap.containsKey(message.getChatId())) {
                         UserManager user = new UserManager(message);
                         user.userCheck(databaseConnect.connection);
-                        sendMsg(adminsList.get(0),"Пользователь " + message.getChat().getUserName() + " добавлен!");
-                        System.out.println("Пользователь " + message.getChat().getUserName() + " добавлен!");
+                        sendMsg(adminsList.get(0),"Пользователь " + message.getChat().getFirstName() + " добавлен!");
+                        System.out.println("Пользователь " + message.getChat().getFirstName() + " добавлен!");
                         sendPhoto(message);
                     }
                     // check if user's is_subscribes status equals false and set it to true if yes
@@ -330,7 +331,7 @@ public class Bot extends TelegramLongPollingBot {
 
     public void sendMsg(Message message, String text) {
         SendMessage sendMessage = new SendMessage();
-        sendMessage.enableMarkdown(true);
+        sendMessage.enableMarkdown(false);
         sendMessage.setChatId(message.getChatId().toString());
         sendMessage.setText(text);
         try {

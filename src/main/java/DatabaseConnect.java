@@ -9,6 +9,7 @@ public class DatabaseConnect {
         String user = "postgres";
         String password = "admin";
 
+
         // Establish connection to DB
         try {
             connection = DriverManager.getConnection(host, user, password);

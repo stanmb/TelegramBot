@@ -8,6 +8,8 @@ import java.util.ArrayList;
 public class ContentKeeper {
 
     //method gets about information from file and returns it in String variable
+    //TODO refactor getAbout method
+
     public String getAbout() {
         String about = "";
         String nextLine;
@@ -17,7 +19,7 @@ public class ContentKeeper {
                     (getClass().getResourceAsStream("about.txt"),"UTF8"));
             while ((nextLine = reader.readLine()) != null) {
                 about += nextLine;
-                if (1 < counter && counter < 6) {
+                if (1 < counter && counter < 8 && counter != 3) {
                     about += "\n";
                 }
                 else {
