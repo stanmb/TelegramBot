@@ -140,7 +140,6 @@ public class Bot extends TelegramLongPollingBot {
                         }
                     }
                     sendMsg(message, stringOfUsers);
-                    System.out.println(stringOfUsers);
                     break;
 
                 case "Сделать рассылку":
