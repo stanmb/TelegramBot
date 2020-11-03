@@ -260,6 +260,7 @@ public class Bot extends TelegramLongPollingBot {
                     if (userMap.containsKey(message.getChatId())) {
                         sendMsg(message, "Добро пожаловать в Hoppy craft bar!", "setButtonsGeneral");
                     }
+                    userMap = user.getUsersIdAndSub(databaseConnect.connection);
                     break;
 
                 case "\uD83E\uDD68 закуски":
@@ -381,6 +382,7 @@ public class Bot extends TelegramLongPollingBot {
         Timer t = new Timer();
         t.scheduleAtFixedRate(new TimerTask() {
             public void run() {
+                userMap = user.getUsersIdAndSub(databaseConnect.connection);
                 Method sentToAdm = Method.ADM;
                 Method sentToBD = Method.BD;
                 LocalTime time1 = LocalTime.of(22,00);
