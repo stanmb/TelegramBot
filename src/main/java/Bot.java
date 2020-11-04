@@ -244,6 +244,7 @@ public class Bot extends TelegramLongPollingBot {
                     sendMsg(message, about, "setButtonsGeneral");
                     break;
                 case "/start":
+                    userMap = user.getUsersIdAndSub(databaseConnect.connection);
                     // check if user exists in database and add if not. Send the welcoming photo
                     if (!userMap.containsKey(message.getChatId())) {
                         UserManager user = new UserManager(message);
@@ -252,12 +253,13 @@ public class Bot extends TelegramLongPollingBot {
                         System.out.println("Пользователь " + message.getChat().getFirstName() + " добавлен!");
                         sendPhoto(message);
                     }
-                    // check if user's is_subscribes status equals false and set it to true if yes
-                    else if (userMap.get(message.getChatId()).equals(false)) {
-                        user.setIsSubscribedTrue(databaseConnect.connection,message.getChatId());
-                    }
+
                     // if we have the contact in DB send plane text without photo
-                    if (userMap.containsKey(message.getChatId())) {
+                    else if (userMap.containsKey(message.getChatId())) {
+                        // check if user's is_subscribes status equals false and set it to true if yes
+                        if (userMap.get(message.getChatId()).equals(false)) {
+                            user.setIsSubscribedTrue(databaseConnect.connection,message.getChatId());
+                        }
                         sendMsg(message, "Добро пожаловать в Hoppy craft bar!", "setButtonsGeneral");
                     }
                     userMap = user.getUsersIdAndSub(databaseConnect.connection);
@@ -392,6 +394,8 @@ public class Bot extends TelegramLongPollingBot {
                 Runnable runnable = new Counter(counterBeer,counterSnacks,counterAbout,databaseConnect.connection,
                         sentToBD);
                 runnable.run();
+                sendCounters();
+                System.out.println("Счетчики отправлены в базу " + counterBeer + " " + counterAbout + " " + counterSnacks + " время: " + now);
                 if (now.isAfter(time1) && now.isBefore(time2)) {
                     Runnable sendToAdm = new Counter(counterBeer,counterSnacks,counterAbout,databaseConnect.connection,
                             sentToAdm);
@@ -401,6 +405,7 @@ public class Bot extends TelegramLongPollingBot {
                 counterAbout = 0;
                 counterSnacks = 0;
                 counterBeer = 0;
+                runnable = null;
             }
         }, 0, 1000 * 60 * 60);
     }
