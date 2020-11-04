@@ -397,8 +397,6 @@ public class Bot extends TelegramLongPollingBot {
                 Runnable runnable = new Counter(counterBeer,counterSnacks,counterAbout,databaseConnect.connection,
                         sentToBD);
                 runnable.run();
-                sendCounters();
-                System.out.println("Счетчики отправлены в базу " + counterBeer + " " + counterAbout + " " + counterSnacks + " время: " + now);
                 if (now.isAfter(time1) && now.isBefore(time2)) {
                     Runnable sendToAdm = new Counter(counterBeer,counterSnacks,counterAbout,databaseConnect.connection,
                             sentToAdm);
