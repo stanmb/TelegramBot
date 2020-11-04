@@ -239,9 +239,11 @@ public class Bot extends TelegramLongPollingBot {
             switch (message.getText()) {
                 case "\uD83C\uDF7A на кранах":
                     sendMsg(message, beerString, "setButtonsGeneral");
+                    counterBeer++;
                     break;
                 case "\uD83C\uDFE1 о нас":
                     sendMsg(message, about, "setButtonsGeneral");
+                    counterAbout++;
                     break;
                 case "/start":
                     userMap = user.getUsersIdAndSub(databaseConnect.connection);
@@ -267,6 +269,7 @@ public class Bot extends TelegramLongPollingBot {
 
                 case "\uD83E\uDD68 закуски":
                     sendMsg(message,snackString,"setButtonsGeneral");
+                    counterSnacks++;
                     break;
             }
         }
