@@ -56,7 +56,7 @@ public class Bot extends TelegramLongPollingBot {
 
     @Override
     public String getBotToken() {
-        return "1015857081:AAGljlDavk22kCwKFIJslvXfoJzRiEOPc-E";
+        return "";
     }
 
     @Override
@@ -283,7 +283,7 @@ public class Bot extends TelegramLongPollingBot {
 
     @Override
     public String getBotUsername() {
-        return "HoppyCraftBarBot";
+        return "";
     }
 
 
