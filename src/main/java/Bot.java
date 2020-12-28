@@ -56,7 +56,7 @@ public class Bot extends TelegramLongPollingBot {
 
     @Override
     public String getBotToken() {
-        return "";
+        return "1015857081:AAGljlDavk22kCwKFIJslvXfoJzRiEOPc-E";
     }
 
     @Override
@@ -139,11 +139,18 @@ public class Bot extends TelegramLongPollingBot {
                     ArrayList<UserManager> userList = new UserManager().getUserList(databaseConnect.connection);
                     String stringOfUsers = "";
                     int counter = 1;
+                    int iterator = 0;
                     for (UserManager user : userList) {
-                        if (user.isSubscribed) {
-                            stringOfUsers += counter + ": " + user.toString() + "\n";
-                            counter++;
-                        }
+                            if (iterator < 30) {
+                                stringOfUsers += counter + ": " + user.toString() + "\n";
+                                counter++;
+                                iterator++;
+                            }
+                            else {
+                                sendMsg(message, stringOfUsers);
+                                iterator = 0;
+                                stringOfUsers = "";
+                            }
                     }
                     sendMsg(message, stringOfUsers);
                     break;
@@ -283,7 +290,7 @@ public class Bot extends TelegramLongPollingBot {
 
     @Override
     public String getBotUsername() {
-        return "";
+        return "HoppyCraftBarBot";
     }
 
 

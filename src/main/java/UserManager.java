@@ -62,7 +62,7 @@ public class UserManager {
         ArrayList<UserManager> userList = new ArrayList<UserManager>();
         try(PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             ResultSet resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
+            while (resultSet.next() && resultSet.getBoolean("is_subscribed")) {
                 userList.add(new UserManager(resultSet.getLong("user_id"), resultSet.getString("first_name"),
                         resultSet.getString("last_name"),resultSet.getString("user_name"),
                         resultSet.getBoolean("is_subscribed"),resultSet.getDate("date_of_join")));
