@@ -20,7 +20,7 @@ public class Beer extends ItemToSell {
     }
 
     public String toString() {
-        return  this.getName() + "\n" + this.getVol() + "\n" + this.getPrice() + "₽" + "\n" + "\n";
+        return  this.getName() + "\n" + this.getVol() + "\n" + this.getPrice() + "₽" + "\n" + "\n" +"\n";
     }
 
 }

@@ -14,23 +14,12 @@ public class Main {
         try {
             telegramBotsApi.registerBot(new Bot());
         }
-        catch (TelegramApiRequestException ex) {
-            ex.printStackTrace();
-            Bot hoppyBot = new Bot("s");
-            hoppyBot.sendMsg(361208695L,"HoppyBot successfully started!");
-            try {
-                hoppyBot.databaseConnect.connection.close();
-                if (hoppyBot.databaseConnect.connection.isClosed()) {
-                    System.out.println("Connection closed");
-                }
-            }
-            catch (SQLException e) {
-                e.printStackTrace();
-            }
+        catch (TelegramApiRequestException e) {
+            e.printStackTrace();
         }
         System.out.println("HoppyBot successfully started!");
 
-        Bot hoppyBot = new Bot("s");
+        Bot hoppyBot = new Bot("");
         hoppyBot.sendMsg(361208695L,"HoppyBot successfully started!");
         try {
             hoppyBot.databaseConnect.connection.close();

@@ -16,7 +16,7 @@ public class Snack extends ItemToSell {
     }
 
     public String toString() {
-        return  this.getName() + "\n" + this.getPrice() + "₽" + "\n" + "\n";
+        return  this.getName() + "\n" + this.getPrice() + "₽" + "\n" + "\n" +"\n";
 
     }
 }
