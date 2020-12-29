@@ -7,14 +7,22 @@ import java.sql.SQLException;
 public class DatabaseConnect {
     Connection connection = null;
     public void connectEstablish() {
-        String host = "jdbc:postgresql://127.0.0.1:5432/hoppydb";
-        String user = "postgres";
-        String password = "admin1";
+        URI dbUri = null;
+        try {
+            dbUri = new URI(System.getenv("DATABASE_URL"));
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+
+        String username = dbUri.getUserInfo().split(":")[0];
+            String password = dbUri.getUserInfo().split(":")[1];
+            String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + ':' + dbUri.getPort() + dbUri.getPath() + "?sslmode=require";
+
 
 
         // Establish connection to DB
         try {
-            connection = DriverManager.getConnection(host, user, password);
+            connection = DriverManager.getConnection(dbUrl, username, password);
             if (connection != null) {
                 System.out.println("Got connection");
             }
