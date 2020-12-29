@@ -1,14 +1,10 @@
-import java.util.ArrayList;
-
-public class Beer {
-    private String name;
+public class Beer extends ItemToSell {
     private String vol;
-    private String priceFor05;
 
-    public Beer(String name, String vol, String priceFor05) {
-        this.name = name;
+    public Beer(String name, String vol, String price) {
+        super.name = name;
+        super.price = price;
         this.vol = vol;
-        this.priceFor05 = priceFor05;
     }
 
     public String getName() {
@@ -19,12 +15,12 @@ public class Beer {
         return vol;
     }
 
-    public String getPriceFor05() {
-        return priceFor05;
+    public String getPrice() {
+        return price;
     }
 
     public String toString() {
-        return  this.getName() + "\n" + this.getVol() + "\n" + this.getPriceFor05() + "₽" + "\n" + "\n" +"\n";
+        return  this.getName() + "\n" + this.getVol() + "\n" + this.getPrice() + "₽" + "\n" + "\n";
     }
 
 }
