@@ -56,7 +56,7 @@ public class Bot extends TelegramLongPollingBot {
 
     @Override
     public String getBotToken() {
-        return "";
+        return System.getenv("BOT_TOKEN");
     }
 
     @Override
@@ -290,7 +290,7 @@ public class Bot extends TelegramLongPollingBot {
 
     @Override
     public String getBotUsername() {
-        return "";
+        return System.getenv("BOT_NAME");
     }
 
 
