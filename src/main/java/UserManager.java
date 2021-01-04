@@ -62,10 +62,12 @@ public class UserManager {
         ArrayList<UserManager> userList = new ArrayList<UserManager>();
         try(PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             ResultSet resultSet = preparedStatement.executeQuery();
-            while (resultSet.next() && resultSet.getBoolean("is_subscribed")) {
-                userList.add(new UserManager(resultSet.getLong("user_id"), resultSet.getString("first_name"),
-                        resultSet.getString("last_name"),resultSet.getString("user_name"),
-                        resultSet.getBoolean("is_subscribed"),resultSet.getDate("date_of_join")));
+            while (resultSet.next()) {
+                if (resultSet.getBoolean("is_subscribed")) {
+                    userList.add(new UserManager(resultSet.getLong("user_id"), resultSet.getString("first_name"),
+                            resultSet.getString("last_name"), resultSet.getString("user_name"),
+                            resultSet.getBoolean("is_subscribed"), resultSet.getDate("date_of_join")));
+                }
             }
         }
         catch (SQLException e) {
@@ -136,7 +138,7 @@ public class UserManager {
     @Override
     public String toString() {
         String string = "Никнейм: " + this.userName + "," + " Имя: " + this.firstName + "," + " Фамилия: "
-                + this.lastName + "," + " Пидписался с: " + this.dateOfJoin;
+                + this.lastName + "," + " Подписался с: " + this.dateOfJoin;
         return string;
     }
 }
