@@ -1,6 +1,7 @@
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
+import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
@@ -83,7 +84,8 @@ public class Bot extends TelegramLongPollingBot {
                     break;
 
                 case "/start":
-                    sendPhoto(message);
+                    sendMsg(message.getChatId(),"Добро пожаловать в Hoppy craft bar!");
+//                    sendPhoto(message);
                     break;
 
                 case "\uD83D\uDEE0 Настройки":
@@ -177,7 +179,7 @@ public class Bot extends TelegramLongPollingBot {
                     }
                     break;
                 case "Фото":
-                    sendPhoto(message);
+                    //  sendPhoto(message);
                     break;
 
                 case "Назад":
@@ -266,7 +268,7 @@ public class Bot extends TelegramLongPollingBot {
                         user.userCheck(databaseConnect.connection);
                         sendMsg(adminsList.get(0),"Пользователь " + message.getChat().getFirstName() + " добавлен!");
                         System.out.println("Пользователь " + message.getChat().getFirstName() + " добавлен!");
-                        sendPhoto(message);
+                        sendMsg(message.getChatId(),"Добро пожаловать в Hoppy craft bar!");
                     }
 
                     // if we have the contact in DB send plane text without photo
@@ -374,20 +376,21 @@ public class Bot extends TelegramLongPollingBot {
             }
         }
     }
-    public void sendPhoto(Message message) {
-        SendPhoto sendPhoto = new SendPhoto();
-        sendPhoto.setChatId(message.getChatId().toString());
-        keyboard.setButtonsGeneral(sendPhoto);
-//        sendPhoto.setPhoto("name", this.getClass().getResourceAsStream("img.jpg"));
-        sendPhoto.setCaption("Добро пожаловать в Hoppy craft bar!");
-        try {
-            execute(sendPhoto);
-        }
-        catch (TelegramApiException e) {
-            e.printStackTrace();
-
-        }
-    }
+//    public void sendPhoto(Message message) {
+//        SendPhoto sendPhoto = new SendPhoto();
+//        sendPhoto.setChatId(message.getChatId().toString());
+//        keyboard.setButtonsGeneral(sendPhoto);
+//        File file = this.getClass().getResourceAsStream("img.jpg");
+//        sendPhoto.setPhoto(this.getClass().getResourceAsStream("img.jpg"));
+//        sendPhoto.setCaption("Добро пожаловать в Hoppy craft bar!");
+//        try {
+//            execute(sendPhoto);
+//        }
+//        catch (TelegramApiException e) {
+//            e.printStackTrace();
+//
+//        }
+//    }
     public void sendCounters () {
         for (Long admin :adminsList) {
             sendMsg(admin,"Число запросов кранов: " + counterBeer + "\n" + "Число запросов закусок: " + counterSnacks
