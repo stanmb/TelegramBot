@@ -378,7 +378,7 @@ public class Bot extends TelegramLongPollingBot {
         SendPhoto sendPhoto = new SendPhoto();
         sendPhoto.setChatId(message.getChatId().toString());
         keyboard.setButtonsGeneral(sendPhoto);
-        sendPhoto.setPhoto("name", this.getClass().getResourceAsStream("img.jpg"));
+//        sendPhoto.setPhoto("name", this.getClass().getResourceAsStream("img.jpg"));
         sendPhoto.setCaption("Добро пожаловать в Hoppy craft bar!");
         try {
             execute(sendPhoto);

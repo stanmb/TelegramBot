@@ -1,20 +1,18 @@
-import org.telegram.telegrambots.ApiContextInitializer;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 
 import java.sql.SQLException;
 
 public class Main {
-    public static void main(String[] args) {
-        // Initialize Api Context
-        ApiContextInitializer.init();
+    public static void main(String[] args) throws TelegramApiException {
         // Instantiate Telegram Bots API
-        TelegramBotsApi telegramBotsApi = new TelegramBotsApi();
+        TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
         // Register our bot
         try {
             telegramBotsApi.registerBot(new Bot());
         }
-        catch (TelegramApiRequestException ex) {
+        catch (TelegramApiException ex) {
             ex.printStackTrace();
             Bot hoppyBot = new Bot("s");
             hoppyBot.sendMsg(361208695L,"HoppyBot successfully started!");
