@@ -383,20 +383,20 @@ public class Bot extends TelegramLongPollingBot {
             }
         }
     }
-    public void sendPhoto(Message message) {
-        SendPhoto sendPhoto = new SendPhoto();
-        sendPhoto.setChatId(message.getChatId().toString());
-        keyboard.setButtonsGeneral(sendPhoto);
-        sendPhoto.setPhoto(new InputFile(file_id));
-        sendPhoto.setCaption("Добро пожаловать в Hoppy craft bar!");
-        try {
-            execute(sendPhoto);
-        }
-        catch (TelegramApiException e) {
-            e.printStackTrace();
-
-        }
-    }
+//    public void sendPhoto(Message message) {
+//        SendPhoto sendPhoto = new SendPhoto();
+//        sendPhoto.setChatId(message.getChatId().toString());
+//        keyboard.setButtonsGeneral(sendPhoto);
+//        sendPhoto.setPhoto(new InputFile(file_id));
+//        sendPhoto.setCaption("Добро пожаловать в Hoppy craft bar!");
+//        try {
+//            execute(sendPhoto);
+//        }
+//        catch (TelegramApiException e) {
+//            e.printStackTrace();
+//
+//        }
+//    }
 
     public void sendPhoto(Long chatId, String text, String fileId) {
         SendPhoto sendPhoto = new SendPhoto();
