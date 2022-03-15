@@ -3,6 +3,7 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.api.objects.Message;
+import org.telegram.telegrambots.meta.api.objects.PhotoSize;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
@@ -27,6 +28,7 @@ public class Bot extends TelegramLongPollingBot {
     int counterAbout = 0;
     HashMap<Long,Boolean> userMap = null;
     String about = "";
+    List<PhotoSize> photoArray = new ArrayList<>();
 
     Bot() {
         databaseConnect = new DatabaseConnect();
@@ -164,13 +166,16 @@ public class Bot extends TelegramLongPollingBot {
 
                 case "Отправить":
                     if (!mailingText.equals("") && numberOfPage == 10) {
-
-                        new MessageSender().sendMessage(mailingText, databaseConnect.connection);
-                        sendMsg(message, "Текст отправлен " + new UserManager()
-                                .getNumberOfUsers(databaseConnect.connection)
-                                + " контакту/ам", "setButtonsGeneralAdmin");
+                        if (!photoArray.isEmpty()) {
+                            sendPhoto(361208695L, mailingText, photoArray.get(0).getFileId());
+                        }
+//                        new MessageSender().sendMessage(mailingText, databaseConnect.connection);
+//                        sendMsg(message, "Текст отправлен " + new UserManager()
+//                                .getNumberOfUsers(databaseConnect.connection)
+//                                + " контакту/ам", "setButtonsGeneralAdmin");
                         mailingText = "";
                         numberOfPage = 0;
+                        photoArray.clear();
                         userMap = user.getUsersIdAndSub(databaseConnect.connection);
                     }
                     else {
@@ -245,12 +250,14 @@ public class Bot extends TelegramLongPollingBot {
                                         "sendMessageKeyboard");
                                 numberOfPage = 10;
                                 mailingText = message.getText();
+                                photoArray = message.getPhoto();
                                 break;
                         }
                     }
             }
         } else {
             System.out.println(message.getChat().getUserName() + " написал: " + message.getText());
+
             switch (message.getText()) {
                 case "\uD83C\uDF7A на кранах":
                     sendMsg(message, beerString, "setButtonsGeneral");
@@ -376,21 +383,35 @@ public class Bot extends TelegramLongPollingBot {
             }
         }
     }
-//    public void sendPhoto(Message message) {
-//        SendPhoto sendPhoto = new SendPhoto();
-//        sendPhoto.setChatId(message.getChatId().toString());
-//        keyboard.setButtonsGeneral(sendPhoto);
-//        File file = this.getClass().getResourceAsStream("img.jpg");
-//        sendPhoto.setPhoto(this.getClass().getResourceAsStream("img.jpg"));
-//        sendPhoto.setCaption("Добро пожаловать в Hoppy craft bar!");
-//        try {
-//            execute(sendPhoto);
-//        }
-//        catch (TelegramApiException e) {
-//            e.printStackTrace();
-//
-//        }
-//    }
+    public void sendPhoto(Message message) {
+        SendPhoto sendPhoto = new SendPhoto();
+        sendPhoto.setChatId(message.getChatId().toString());
+        keyboard.setButtonsGeneral(sendPhoto);
+        sendPhoto.setPhoto(new InputFile(file_id));
+        sendPhoto.setCaption("Добро пожаловать в Hoppy craft bar!");
+        try {
+            execute(sendPhoto);
+        }
+        catch (TelegramApiException e) {
+            e.printStackTrace();
+
+        }
+    }
+
+    public void sendPhoto(Long chatId, String text, String fileId) {
+        SendPhoto sendPhoto = new SendPhoto();
+        sendPhoto.setChatId(chatId.toString());
+        keyboard.setButtonsGeneral(sendPhoto);
+        sendPhoto.setPhoto(new InputFile(fileId));
+        sendPhoto.setCaption(text);
+        try {
+            execute(sendPhoto);
+        }
+        catch (TelegramApiException e) {
+            e.printStackTrace();
+
+        }
+    }
     public void sendCounters () {
         for (Long admin :adminsList) {
             sendMsg(admin,"Число запросов кранов: " + counterBeer + "\n" + "Число запросов закусок: " + counterSnacks
