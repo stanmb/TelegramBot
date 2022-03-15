@@ -165,6 +165,9 @@ public class Bot extends TelegramLongPollingBot {
                     break;
 
                 case "Отправить":
+                    if (!photoArray.isEmpty()) {
+                        sendPhoto(361208695L, "text", photoArray.get(0).getFileId());
+                    }
                     if (!mailingText.equals("") && numberOfPage == 10) {
                         if (!photoArray.isEmpty()) {
                             sendPhoto(361208695L, mailingText, photoArray.get(0).getFileId());
