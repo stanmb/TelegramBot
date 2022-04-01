@@ -39,6 +39,7 @@ public class Bot extends TelegramLongPollingBot {
         userMap = user.getUsersIdAndSub(databaseConnect.connection);
         adminsList.add(361208695L);
         adminsList.add(337817426L);
+        adminsList.add(232084100L);
         setUpTimer();
         about = contentKeeper.getAbout();
     }
