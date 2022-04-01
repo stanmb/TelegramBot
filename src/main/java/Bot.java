@@ -35,7 +35,7 @@ public class Bot extends TelegramLongPollingBot {
                 .getListOfBeer(databaseConnect.connection));
         snackString = "У нас есть кое-что к пиву:" + "\n" + "\n" + contentKeeper.getItemsString(contentKeeper
                 .getListOfSnacks(databaseConnect.connection)) + "\n"
-                + "P.S. Вы всегда можете заказать доставку еды в наш бар из любого заведения";
+                + "P.S. Также Вы можете заказать доставку из Додо в наш бар со скидкой 15%!";
         userMap = user.getUsersIdAndSub(databaseConnect.connection);
         adminsList.add(361208695L);
         adminsList.add(337817426L);
