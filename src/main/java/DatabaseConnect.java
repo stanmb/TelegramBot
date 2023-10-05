@@ -1,5 +1,3 @@
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -7,18 +5,9 @@ import java.sql.SQLException;
 public class DatabaseConnect {
     Connection connection = null;
     public void connectEstablish() {
-        URI dbUri = null;
-        try {
-            dbUri = new URI(System.getenv("DATABASE_URL"));
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
-
-        String username = dbUri.getUserInfo().split(":")[0];
-            String password = dbUri.getUserInfo().split(":")[1];
-            String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + ':' + dbUri.getPort() + dbUri.getPath() + "?sslmode=require";
-
-
+        String username = "stanmb";
+        String password = "XwHsNVwLNoL4";
+        String dbUrl = "jdbc:postgresql://185.240.103.224:5432/tel_bots";
 
         // Establish connection to DB
         try {
@@ -41,16 +30,6 @@ public class DatabaseConnect {
               ex.printStackTrace();
            }
             e.printStackTrace();
-            return;
         }
-    }
-    public boolean isConnected (Connection connection) {
-        boolean result = false;
-        try {
-            result = connection.isClosed();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return result;
     }
 }

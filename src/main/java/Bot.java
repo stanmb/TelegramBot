@@ -1,7 +1,5 @@
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
-import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
@@ -39,7 +37,8 @@ public class Bot extends TelegramLongPollingBot {
         userMap = user.getUsersIdAndSub(databaseConnect.connection);
         adminsList.add(361208695L);
         adminsList.add(337817426L);
-        adminsList.add(232084100L);
+        adminsList.add(6266302143L);
+        System.out.println(adminsList);
         setUpTimer();
         about = contentKeeper.getAbout();
     }
@@ -58,7 +57,7 @@ public class Bot extends TelegramLongPollingBot {
 
     @Override
     public String getBotToken() {
-        return System.getenv("BOT_TOKEN");
+        return "1015857081:AAGljlDavk22kCwKFIJslvXfoJzRiEOPc-E";
     }
 
     @Override
@@ -293,7 +292,7 @@ public class Bot extends TelegramLongPollingBot {
 
     @Override
     public String getBotUsername() {
-        return System.getenv("BOT_NAME");
+        return "HoppyCraftBarBot";
     }
 
 
@@ -377,21 +376,6 @@ public class Bot extends TelegramLongPollingBot {
             }
         }
     }
-//    public void sendPhoto(Message message) {
-//        SendPhoto sendPhoto = new SendPhoto();
-//        sendPhoto.setChatId(message.getChatId().toString());
-//        keyboard.setButtonsGeneral(sendPhoto);
-//        File file = this.getClass().getResourceAsStream("img.jpg");
-//        sendPhoto.setPhoto(this.getClass().getResourceAsStream("img.jpg"));
-//        sendPhoto.setCaption("Добро пожаловать в Hoppy craft bar!");
-//        try {
-//            execute(sendPhoto);
-//        }
-//        catch (TelegramApiException e) {
-//            e.printStackTrace();
-//
-//        }
-//    }
     public void sendCounters () {
         for (Long admin :adminsList) {
             sendMsg(admin,"Число запросов кранов: " + counterBeer + "\n" + "Число запросов закусок: " + counterSnacks
